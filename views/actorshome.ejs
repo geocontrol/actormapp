@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<% include partials/head %>
+
+		<script>
+		var counter = 1;
+		
+		function addInput(divName){
+    	
+        	var newdiv = document.createElement('div');
+          	newdiv.innerHTML = "<input type='text' name='label'> <input type='text' name='value'>";
+          	document.getElementById(divName).appendChild(newdiv);
+          	counter++;
+     	
+		}
+
+	
+		</script>
+	</head>
+	<body class="container">
+		<header>
+			<% include partials/header %>
+		</header>
+		
+		<main>
+			<div class="jumbotron">
+
+			<div>
+		 
+           <% if(typeof(errorMessage) !== 'undefined') {%>
+              <span><%= errorMessage %></span>
+           <% } %>
+		 
+           <% actors.forEach(function(actor) { %>
+		   <tr>
+			 <td><a href="/actors/<%= actor._id %>"><%= actor.name %></a></td>
+		   </tr>
+		<% }); %>
+
+		</main>
+		
+		<footer>
+			<% include partials/footer %>
+		</footer>
+	</body>
+</html>
