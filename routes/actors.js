@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-
+var ObjectId = require('mongodb').ObjectID;
 var database = require('../database');
 // custom library
 //var config = require('../support/config');
@@ -23,23 +23,6 @@ router.get('/add', function(req, res, next) {
 });
 
 /* POST /actors/add */
-router.post('/addold', function(req, res, next) {
-	console.log('Add an Actor:');
-	console.log(req.body);
-
-	// Take the parameters into a JSON object
-	var Actor = {'name' : req.body.name};
-	for(var index in req.body.label) {
-		Actor[req.body.label[index]] = req.body.value[index];
-	}
-	console.log('JSON - Actor : ' + JSON.stringify(Actor));
-	database.insertActor(db, Actor, function() {
-		// 
-	});
-	res.send('JSON - Actor : ' + JSON.stringify(Actor));
-});
-
-/* POST to Add User Service */
 router.post('/add', function(req, res, next) {
 	console.log('Add an Actor:');
 	console.log(req.body);
@@ -83,7 +66,7 @@ router.post('/add', function(req, res, next) {
 
 /* GET /actors/id */
 router.get('/:id', function(req, res, next) {
-	console.log('Get the details of an Actor:');
+	console.log('Get the details of an Actor:' + req.params.id);
 	console.log(req.body);
 
     // Set our internal DB variable
@@ -98,6 +81,64 @@ router.get('/:id', function(req, res, next) {
 	});
 });
 
+/* PUT /actors/id */
+router.post('/:id', function(req, res, next) {
+	console.log('Update the Actor : ' + req.params.id);
+	console.log(req.body);
 
+	var Actor = {};
+	// Rebuild the Actor object
+	for(var parameterName in req.body) {
+		if(parameterName != 'label' && parameterName != 'value') {
+			console.log('NAME: ' + parameterName + ' : ' + req.body[parameterName]);
+			if(parameterName != '_method' && parameterName != 'submit'){
+				Actor[parameterName] = req.body[parameterName];
+			}
+		} else {
+			if (Array.isArray(req.body.label)) {
+				for(var index in req.body.label) {
+					Actor[req.body.label[index]] = req.body.value[index];
+				};
+			} else {
+				Actor[req.body.label] = req.body.value;
+			};
+		};
+
+	};
+
+	console.log(Actor);
+    // Set our internal DB variable
+    var db = req.db;
+
+    // Set our collection
+    var collection = db.get('actors');
+
+    collection.update({_id: req.params.id},Actor);
+
+    res.redirect('/actors/' + req.params.id);
+});
+
+/* GET /actors/delete/id */
+router.get('/delete/:id', function(req, res, next) {
+	console.log('Delete the Actor : ' + req.params.id);
+
+	var id = req.params.id;
+	console.log('ID: ' + id);
+	// Set our internal DB variable
+    var db = req.db;
+    // Set our collection
+    var collection = db.get('actors');
+
+    console.log(collection);
+
+    collection.remove({ "_id": req.params.id }, function (err, result){
+    	if(err){
+    		console.log(err);
+    	} else {
+    		 res.redirect('/actors');
+    	}
+	});
+   
+});
 
 module.exports = router;

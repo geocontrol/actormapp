@@ -31,10 +31,37 @@
            <% if(typeof(errorMessage) !== 'undefined') {%>
               <span><%= errorMessage %></span>
            <% } %>
-		 
-		 	<p>Actor:
-		 	<%- JSON.stringify(actor) %>
 
+
+		<form method="post" action="/actors/<%= actor._id %>">
+		<input type="hidden" name="_method" value="put" />
+		 
+           <% if(typeof(errorMessage) !== 'undefined') {%>
+              <span><%= errorMessage %></span>
+           <% } %>
+		 
+           <div class="form-group">
+		 	<% for (var key in actor) { %>
+		 		<% if(key != '_id') { %>
+		 			<label for="<%= key %>"><%= key %></label>
+              		<input type="text" class="form-control" name="<%= key %>" id="<%= key %>" required="true" value="<%= actor[key] %>"/>
+		 		<%	} %>
+			<% } %>
+
+			<br>
+			<p> Add new parameters
+			<div id="dynamicInput">
+          		<input type="text" id="label1" name="label"> <input type="text" id="value1" name="value"> 
+     		</div>
+     		<input type="button" value="+ parameter" onClick="addInput('dynamicInput');">
+		   
+	          <p>
+	             <button type="submit" name="submit" id="submit" class="btn btn-default">update</button>
+	          </p>
+			
+	     </form>
+
+	     <button type="delete" name="delete" class="btn btn-default" onclick="window.location.href='/actors/delete/<%= actor._id %>';">delete actor</button>
 		 	</main>
 		
 	<footer>
