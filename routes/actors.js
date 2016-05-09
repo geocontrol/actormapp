@@ -113,9 +113,17 @@ router.post('/:id', function(req, res, next) {
 				Actor[req.body.label] = req.body.value;
 			};
 			} else {
-				// Write in the relTarget & actorTarget values
-				Actor['relTarget'] = req.body.relTarget;
-				Actor['actorTarget'] = req.body.actorTarget;
+				if(req.body.relTarget.slice(-1).pop() != '') {
+					// Then write 
+					// Write in the relTarget & actorTarget values
+					Actor['relTarget'] = req.body.relTarget;
+					Actor['actorTarget'] = req.body.actorTarget;
+				} else {
+					lastTarget = req.body.relTarget.pop();
+					lastActor = req.body.actorTarget.pop();
+					Actor['relTarget'] = req.body.relTarget;
+					Actor['actorTarget'] = req.body.actorTarget;
+				}
 			};
 		};
 
