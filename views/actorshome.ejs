@@ -28,16 +28,20 @@
 
 			<div>
 		 
+		 <h2>List of Actors</h2>
+
            <% if(typeof(errorMessage) !== 'undefined') {%>
               <span><%= errorMessage %></span>
            <% } %>
-		 
+			<ul>		 
            <% actors.forEach(function(actor) { %>
-		   <tr>
-			 <td><a href="/actors/<%= actor._id %>"><%= actor.name %></a></td>
-		   </tr>
-		<% }); %>
 
+			 <li><a href="/actors/<%= actor._id %>"><%= actor.name %></a></li>
+
+		<% }); %>
+			</ul>
+		<hr>
+		<button type="add" name="add" class="btn btn-default" onclick="window.location.href='/actors/add';">add actor</button>
 		</main>
 		
 		<footer>

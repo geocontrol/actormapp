@@ -59,7 +59,7 @@ router.post('/add', function(req, res, next) {
         }
         else {
             // And forward to success page
-            res.redirect("/");
+            res.redirect("/actors");
         }
     });
 });
@@ -77,7 +77,16 @@ router.get('/:id', function(req, res, next) {
 
 	collection.findById(req.params.id, function (err, post) {
 		if (err) return next(err);
-		res.render('actordetails', {title: 'Actor Mapping - Actors', actor: post});
+		collection.find({}, function (err, actors){
+			if (err) return next(err);
+			var actorDropDown = "<select name='actorTarget[]'>";
+			actors.forEach(function(actordetail) {
+		 		actorDropDown = actorDropDown + "<option value='" + actordetail._id + "'>" + actordetail.name + "</option>"  
+		 	});
+		 	actorDropDown = actorDropDown + "</select>";
+		 	console.log('THE Actor : ' + post);
+			res.render('actordetails', {title: 'Actor Mapping - Actors', actor: post, actordropdown: actorDropDown});
+		});
 	});
 });
 
@@ -89,18 +98,24 @@ router.post('/:id', function(req, res, next) {
 	var Actor = {};
 	// Rebuild the Actor object
 	for(var parameterName in req.body) {
-		if(parameterName != 'label' && parameterName != 'value') {
+		if(parameterName != 'label' && parameterName != 'value' && parameterName != 'relTarget' && parameterName != 'actorTarget') {
 			console.log('NAME: ' + parameterName + ' : ' + req.body[parameterName]);
 			if(parameterName != '_method' && parameterName != 'submit'){
 				Actor[parameterName] = req.body[parameterName];
 			}
 		} else {
+			if(parameterName != 'relTarget' && parameterName != 'actorTarget') {
 			if (Array.isArray(req.body.label)) {
 				for(var index in req.body.label) {
 					Actor[req.body.label[index]] = req.body.value[index];
 				};
 			} else {
 				Actor[req.body.label] = req.body.value;
+			};
+			} else {
+				// Write in the relTarget & actorTarget values
+				Actor['relTarget'] = req.body.relTarget;
+				Actor['actorTarget'] = req.body.actorTarget;
 			};
 		};
 
