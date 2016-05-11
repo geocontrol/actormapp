@@ -164,4 +164,28 @@ router.get('/delete/:id', function(req, res, next) {
    
 });
 
+/* GET /actors/remove/id?key=value */
+router.get('/remove/:id/:key', function(req, res, next) {
+	console.log('Remove Parameter from Actor: ' + req.params.id);
+	console.log(req.params);
+	console.log(req.body);
+	var key1 = req.params.key
+	var key = {};
+	key[key1] = 1
+	// Set our internal DB variable
+    var db = req.db;
+    // Set our collection
+    var collection = db.get('actors');
+    console.log("Key: " + key);
+    collection.update({"_id": req.params.id}, { $unset: key }, {w:1}, function (err, result){
+    	if(err){
+    		console.log(err);
+    	} else {
+    		console.log("Result: " + result);
+    		res.redirect('/actors/' + req.params.id);
+    	}
+    });	
+	
+});
+
 module.exports = router;

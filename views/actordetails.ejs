@@ -60,7 +60,7 @@
 		 		<% if(key != '_id' && key != '') { %>
 		 			<% if(key != 'actorTarget' && key != 'relTarget') { %>
 		 				<label for="<%= key %>"><%= key %></label>
-              			<input type="text" class="form-control" name="<%= key %>" id="<%= key %>" value="<%= actor[key] %>"/>
+              			<input type="text" class="form-control" name="<%= key %>" id="<%= key %>" value="<%= actor[key] %>"/> <a href="/actors/remove/<%= actor._id %>/<%= key %>">X</a><br>
 		 			<% } %>
 		 		<% } %>
 			<% } %>
