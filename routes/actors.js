@@ -4,6 +4,10 @@ var ObjectId = require('mongodb').ObjectID;
 var database = require('../database');
 // custom library
 //var config = require('../support/config');
+var multer = require('multer');
+var upload = multer({ dest: 'uploads/' });
+var sizeOf = require('image-size');
+require('string.prototype.startswith');
 
 /* GET /actors listing */
 router.get('/', function(req, res, next) {
@@ -88,6 +92,28 @@ router.get('/:id', function(req, res, next) {
 			res.render('actordetails', {title: 'Actor Mapping - Actors', actor: post, actordropdown: actorDropDown});
 		});
 	});
+});
+
+/* POST /upload Handle uploading images for an actor */
+router.post('/upload', upload.single( 'file' ), function(req, res, next) {
+	console.log('Upload an image');
+	console.log('Actor ID: ' + req.body.actor_id);
+	if ( !req.file.mimetype.startsWith( 'image/' ) ) {
+	    return res.status( 422 ).json( {
+	      error : 'The uploaded file must be an image'
+	    } );
+	}
+
+	var dimensions = sizeOf( req.file.path );
+
+	if ( ( dimensions.width < 640 ) || ( dimensions.height < 480 ) ) {
+	    return res.status( 422 ).json( {
+	      error : 'The image must be at least 640 x 480px'
+	    } );
+	}
+
+	console.log('Image Details: ' + JSON.stringify(req.file) );
+	return res.status( 200 ).send( req.file );
 });
 
 /* PUT /actors/id */
@@ -187,5 +213,6 @@ router.get('/remove/:id/:key', function(req, res, next) {
     });	
 	
 });
+
 
 module.exports = router;

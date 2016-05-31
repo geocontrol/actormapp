@@ -12,11 +12,14 @@
     "debug": "~2.2.0",
     "ejs": "^2.4.1",
     "express": "~4.13.1",
+    "image-size": "^0.5.0",
     "jade": "~1.11.0",
     "mongodb": "1.4.x",
     "mongoskin": "^2.1.0",
     "monk": "^1.0.1",
     "morgan": "~1.6.1",
-    "serve-favicon": "~2.3.0"
+    "multer": "^1.1.0",
+    "serve-favicon": "~2.3.0",
+    "string.prototype.startswith": "^0.2.0"
   }
 }
