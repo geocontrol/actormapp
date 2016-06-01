@@ -34,7 +34,7 @@
 			
 			alert(JSON.stringify(file));
     		var newdiv = document.createElement('div');
-      		newdiv.innerHTML = "<img src=/" + file.path + ">";
+      		newdiv.innerHTML = "<input type='hidden' name='imagepath' value='" + file.path + "'><img src='/" + file.path + "' height='150' width='150'>";
       		document.getElementById('images').appendChild(newdiv);
 		}
 
@@ -97,7 +97,7 @@
            <div class="form-group">
 		 	<% for (var key in actor) { %>
 		 		<% if(key != '_id' && key != '') { %>
-		 			<% if(key != 'actorTarget' && key != 'relTarget') { %>
+		 			<% if(key != 'actorTarget' && key != 'relTarget' && key != 'imagepath') { %>
 		 				<label for="<%= key %>"><%= key %></label>
               			<input type="text" class="form-control" name="<%= key %>" id="<%= key %>" value="<%= actor[key] %>"/> <a href="/actors/remove/<%= actor._id %>/<%= key %>">X</a><br>
 		 			<% } %>
@@ -127,6 +127,11 @@
 
 			<hr>
 			<p> Images
+			<% if(actor.imagepath) {%>
+			<% actor.imagepath.forEach(function(el, index) { %>
+			<input type='hidden' name='imagepath' value='<%= el %>'><img src='/<%= el %>' height='150' width='150'>
+			<% }); %>
+			<% } %>
 			<div id="images">
 
 			</div>
@@ -138,10 +143,12 @@
 			
 	     </form>
 
+		 <div id="imageupload">
+		 <p>Upload an image to add</p>
 <form id="upload-widget" method="post" action="/actors/upload" class="dropzone">
 <input type="hidden" name="actor_id" value="<%= actor._id %>" />
 </form>
-
+		</div>
 
 	     <a href='/actors/delete/<%= actor._id %>'>delete actor</a>
 		 	</main>
