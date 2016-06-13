@@ -32,9 +32,9 @@
 
 		function addImage(file){
 			
-			alert(JSON.stringify(file));
+			//alert(JSON.stringify(file));
     		var newdiv = document.createElement('div');
-      		newdiv.innerHTML = "<input type='hidden' name='imagepath' value='" + file.path + "'><img src='/" + file.path + "' height='150' width='150'>";
+      		newdiv.innerHTML = "<input type='hidden' name='imagepath' value='" + file.path + "'><img src='/" + file.path + "' height='150' width='150'><br>Filename: <input type='text' name='filename' value='" + file.originalname + "'><br>Comments: <input type='text' name='imagecomments'>";
       		document.getElementById('images').appendChild(newdiv);
 		}
 
@@ -51,6 +51,7 @@
 		    this.on('success', function( file, resp ){
 		      console.log( file );
 		      console.log( resp );
+			  this.removeFile(file);
 			  addImage(resp);
 		    });
 		    this.on('thumbnail', function(file) {
@@ -129,9 +130,10 @@
 			<p> Images
 			<% if(actor.imagepath) {%>
 			<% actor.imagepath.forEach(function(el, index) { %>
-			<input type='hidden' name='imagepath' value='<%= el %>'><img src='/<%= el %>' height='150' width='150'>
+			<p><input type='hidden' name='imagepath' value='<%= el %>'><img src='/<%= el %>' height='150' width='150'>
 			<% }); %>
 			<% } %>
+			<hr>
 			<div id="images">
 
 			</div>
@@ -150,7 +152,7 @@
 </form>
 		</div>
 
-	     <a href='/actors/delete/<%= actor._id %>'>delete actor</a>
+	     <a href='/actors/delete/<%= actor._id %>' class="btn btn-primary btn-lg" role="button">Delete This Actor</a>
 		 	</main>
 		
 	<footer>

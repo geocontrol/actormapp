@@ -68,6 +68,99 @@ router.post('/add', function(req, res, next) {
     });
 });
 
+/* GET /actors/map */
+router.get('/map', function(req, res, next) {
+	console.log('Get data for a d3 actor map');
+	var JSONActorsTxt = '"nodes":[';
+	var JSONLinksTxt = '"links":[';
+	// Set our internal DB variable
+    var db = req.db;
+    // Set our collection
+    var collection = db.get('actors');
+
+    collection.find({}, function (err, actors){
+    	if(err){
+    		console.log(err);
+    	} else {
+		//res.render('actorshome', {title: 'Actor Mapping - Actors', actors: docs});
+		// Create a new JSON formatted blob of data
+		actors.forEach(function(actordetail) {
+			// Add the actor details to the Actor array
+	 		JSONActorsTxt = JSONActorsTxt + '{"id":"' + actordetail._id + '","name":"' + actordetail.name + '"},';  
+			console.log(JSONActorsTxt);
+			// Add the link/relationship details ro the Links array
+			actordetail.actorTarget.forEach(function(target){
+				JSONLinksTxt = JSONLinksTxt + '{"source":"' + actordetail._id + '","target":"' + target + '"},';
+				console.log(JSONLinksTxt);
+			});			
+	 	});
+		
+		// close the array strings
+		JSONActorsTxt = JSONActorsTxt + ']';
+		JSONLinksTxt = JSONLinksTxt + ']';
+		console.log('ACTOR JSON : ' + JSONActorsTxt);
+		console.log('LINK JSON : ' + JSONLinksTxt);
+		JSONText = '{ ' + JSONActorsTxt + ', ' + JSONLinksTxt + '}';
+		console.log(JSONText);
+		
+		res.render('actormap', {json: JSONText});
+		}
+	});		
+});
+
+
+router.get('/map2', function(req, res, next) {
+	res.render('actormap2');
+});
+
+/* GET /actors/map */
+router.get('/map2data', function(req, res, next) {
+	console.log('Get data for a d3 actor map');
+	var JSONActorsTxt = '"nodes":[';
+	// var JSONLinksTxt = '"links":[';
+	var JSONLinksTxt = 'source,target,value\r';
+	// Set our internal DB variable
+    var db = req.db;
+    // Set our collection
+    var collection = db.get('actors');
+
+    collection.find({}, function (err, actors){
+    	if(err){
+    		console.log(err);
+    	} else {
+		//res.render('actorshome', {title: 'Actor Mapping - Actors', actors: docs});
+		// Create a new JSON formatted blob of data
+		actors.forEach(function(actordetail) {
+			// Add the actor details to the Actor array
+	 		JSONActorsTxt = JSONActorsTxt + '{"id":"' + actordetail._id + '","name":"' + actordetail.name + '"}';  
+			//console.log(JSONActorsTxt);
+			// Add the link/relationship details ro the Links array
+			if(actordetail.actorTarget){
+			actordetail.actorTarget.forEach(function(target){
+				valueNumber = Math.random();
+				//JSONLinksTxt = JSONLinksTxt + '{"source":"' + actordetail._id + '","target":"' + target + '"},';
+				JSONLinksTxt = JSONLinksTxt + '"' + actordetail._id + '","' + target + '",' + valueNumber + '\r';
+				console.log(JSONLinksTxt);
+			});			
+			} else {
+				valueNumber = Math.random();
+				JSONLinksTxt = JSONLinksTxt + '"' + actordetail._id + '","' + actordetail._id + '",' + valueNumber + '\r';
+			};
+	 	});
+		
+		// close the array strings
+		//JSONActorsTxt = JSONActorsTxt + ']';
+		//JSONLinksTxt = JSONLinksTxt + ']';
+		//console.log('ACTOR JSON : ' + JSONActorsTxt);
+		//console.log('LINK JSON : ' + JSONLinksTxt);
+		//JSONText = '{ ' + JSONActorsTxt + ', ' + JSONLinksTxt + '}';
+		//console.log(JSONText);
+		
+		res.send(JSONLinksTxt);
+		}
+	});		
+});
+
 /* GET /actors/id */
 router.get('/:id', function(req, res, next) {
 	console.log('Get the details of an Actor:' + req.params.id);
@@ -213,6 +306,9 @@ router.get('/remove/:id/:key', function(req, res, next) {
     });	
 	
 });
+
+
+
 
 
 module.exports = router;
