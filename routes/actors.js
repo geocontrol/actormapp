@@ -78,20 +78,42 @@ router.post('/add2', function(req, res, next) {
 	
     // Set our collection
     var collection = db.get('workshops');
-	
-	var JSONnodes = {'nodes':[]};
-	req.body.name.forEach(function(name) {
-		console.log(name);
-		var JSONname = {'name': name};
-		console.log(JSON.stringify(JSONname));
-		
-		JSONnodes.nodes.push(JSONname);
-		console.log(JSON.stringify(JSONnodes));
-	});
 
-	collection.update({_id: req.body._id},{$set: JSONnodes}, {w: 1}, function(err, count, status){
-		console.log(status);
+	collection.findById(req.body._id, function (err, post) {
+		if (err) return next(err);
+	 	console.log('Workshop : ' + post);
+		if (post.nodes) {
+			var JSONnodes = {'nodes':post.nodes};
+			console.log(JSON.stringify(JSONnodes));
+		} else {
+			var JSONnodes = {'nodes':[]};
+			console.log(JSON.stringify(JSONnodes));
+		}
+
+		if (Array.isArray(req.body.name)) {
+			//
+			req.body.name.forEach(function(name) {
+				console.log(name);
+				var JSONname = {'name': name};
+				console.log(JSON.stringify(JSONname));
+				
+				JSONnodes.nodes.push(JSONname);
+				console.log(JSON.stringify(JSONnodes));
+			});
+		} else {
+			var JSONname = {'name': req.body.name};
+			
+			JSONnodes.nodes.push(JSONname);
+			console.log(JSON.stringify(JSONnodes));
+		};
+			
+		collection.update({_id: req.body._id},{$set: JSONnodes}, {w: 1}, function(err, count, status){
+			console.log(status);
+		});
 	});
+	
+	res.redirect('/workshops/' + req.body._id);
+	
 });
 
 

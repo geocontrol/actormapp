@@ -27,6 +27,20 @@
 
 			<p>Name: <%= workshop.name %>
 
+
+			<h2>Actors</h2>
+				<ol>		
+				<% if(workshop.nodes) { %>
+	           		<% workshop.nodes.forEach(function(node) { %>
+
+				 		<li><a href="/workshops/"><%= node.name %></a></li>
+
+					<% }); %>
+				<% }; %>
+				</ol>
+			
+			<hr>
+			
 			<p>Add Actors</p>
 			<form method="post" action="/actors/add2">
 			<input type="hidden" name="_id" value="<%= workshop._id %>" />
