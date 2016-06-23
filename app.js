@@ -16,7 +16,7 @@ var database = require('./database');
 
 var mongodb = require('mongodb');
 var monk = require('monk');
-var db = monk('mongodb://localhost:27017/myproject');
+var db = monk('mongodb://localhost:27017/actorMap');
 
 var app = express();
 

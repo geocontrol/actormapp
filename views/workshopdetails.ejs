@@ -4,7 +4,15 @@
 		<% include partials/head %>
 
 		<script>
-
+		var counter = 1;
+		
+		function addInput(divName){
+    	
+        	var newdiv = document.createElement('div');
+          	newdiv.innerHTML = "<label for='name'>Name: </label> <input class='form-control' type='text' name='name'>";
+          	document.getElementById(divName).appendChild(newdiv);
+          	counter++;
+		}
 		</script>
 	</head>
 	<body class="container">
@@ -19,6 +27,22 @@
 
 			<p>Name: <%= workshop.name %>
 
+			<p>Add Actors</p>
+			<form method="post" action="/actors/add2">
+			<input type="hidden" name="_id" value="<%= workshop._id %>" />
+				<div class="form-group">
+				<div id="dynamicActor">
+          		
+     			</div>
+				<input type="button" value="+ actor" onClick="addInput('dynamicActor');">
+			
+				</div>
+				
+  	          <p>
+  	             <button type="submit" name="submit" id="submit" class="btn btn-default">update actors</button>
+  	          </p>
+			  
+			</form>
 		 	</main>
 		
 	<footer>

@@ -68,6 +68,34 @@ router.post('/add', function(req, res, next) {
     });
 });
 
+/* POST /actors/add2 */
+router.post('/add2', function(req, res, next) {
+	console.log('Add Actors:');
+	console.log(req.body);
+
+    // Set our internal DB variable
+    var db = req.db;
+	
+    // Set our collection
+    var collection = db.get('workshops');
+	
+	var JSONnodes = {'nodes':[]};
+	req.body.name.forEach(function(name) {
+		console.log(name);
+		var JSONname = {'name': name};
+		console.log(JSON.stringify(JSONname));
+		
+		JSONnodes.nodes.push(JSONname);
+		console.log(JSON.stringify(JSONnodes));
+	});
+
+	collection.update({_id: req.body._id},{$set: JSONnodes}, {w: 1}, function(err, count, status){
+		console.log(status);
+	});
+});
+
+
+
 /* GET /actors/map */
 router.get('/map', function(req, res, next) {
 	console.log('Get data for a d3 actor map');
