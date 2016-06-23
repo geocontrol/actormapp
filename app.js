@@ -10,6 +10,7 @@ var upload = multer({ dest: 'uploads/' });
 var routes = require('./routes/index');
 var users = require('./routes/users');
 var actors = require('./routes/actors');
+var workshops = require('./routes/workshops');
 
 var database = require('./database');
 
@@ -80,6 +81,7 @@ app.use(function(req, res, next) {
 app.use('/', routes);
 app.use('/users', users);
 app.use('/actors', actors);
+app.use('/workshops', workshops);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

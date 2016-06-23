@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<% include partials/head %>
+
+		<script>
+		var counter = 1;
+		
+		function addInput(divName){
+    	
+        	var newdiv = document.createElement('div');
+          	newdiv.innerHTML = "<input type='text' name='label'> <input type='text' name='value'>";
+          	document.getElementById(divName).appendChild(newdiv);
+          	counter++;
+     	
+		}
+
+	
+		</script>
+	</head>
+	<body class="container">
+		<header>
+			<% include partials/header %>
+		</header>
+		
+		<main>
+			<div class="jumbotron">
+
+			<div>
+		 
+		 <h2>List of Workshops</h2>
+
+           <% if(typeof(errorMessage) !== 'undefined') {%>
+              <span><%= errorMessage %></span>
+           <% } %>
+			<ul>		 
+           <% workshops.forEach(function(workshop) { %>
+
+			 <li><a href="/workshops/<%= workshop._id %>"><%= workshop.name %></a></li>
+
+		<% }); %>
+			</ul>
+		<hr>
+		<h2>Add New Workshop</h2>
+		<form method="post" action="/workshops/add">
+		<input type="hidden" name="_method" value="put" />
+	 
+           <% if(typeof(errorMessage) !== 'undefined') {%>
+              <span><%= errorMessage %></span>
+           <% } %>
+	 
+           <div class="form-group">
+
+		 	<label for="name">Name</label>
+            <input type="text" class="form-control" name="name" id="name"/> <br>
+	        <p>
+	           <button type="submit" name="submit" id="submit" class="btn btn-default">update</button>
+	        </p>
+		
+		
+	     </form>
+		</main>
+		
+		<footer>
+			<% include partials/footer %>
+		</footer>
+	</body>
+</html>
