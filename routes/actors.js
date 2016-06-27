@@ -117,6 +117,65 @@ router.post('/add2', function(req, res, next) {
 });
 
 
+/* POST /actors/addrel2 */
+router.post('/addrel2', function(req, res, next) {
+	console.log('Add Relationships:');
+	console.log(req.body);
+
+    // Set our internal DB variable
+    var db = req.db;
+	
+    // Set our collection
+    var collection = db.get('workshops');
+	
+	collection.findById(req.body._id, function (err, post) {
+		if (err) return next(err);
+	 	console.log('Workshop : ' + post);
+		if (post.links) {
+			var JSONlinks = {'links':post.links};
+			console.log(JSON.stringify(JSONlinks));
+		} else {
+			var JSONlinks = {'links':[]};
+			console.log(JSON.stringify(JSONlinks));
+		}
+
+		if (Array.isArray(req.body.source)) {
+			for(var index in req.body.source) {
+				JSONrel = {'source': Number(req.body.source[index]), 'target': Number(req.body.target[index]), 'value': Number(req.body.value[index])};
+				console.log(JSON.stringify(JSONrel));
+				
+				JSONlinks.links.push(JSONrel);
+				console.log(JSON.stringify(JSONlinks));
+			};
+		} else {
+			JSONrel = {'source': req.body.source, 'target': req.body.target, 'value': req.body.value};
+			JSONlinks.links.push(JSONrel);
+			console.log(JSON.stringify(JSONlinks));
+		};
+			
+		collection.update({_id: req.body._id},{$set: JSONlinks}, {w: 1}, function(err, count, status){
+			console.log(status);
+		});
+	});
+	
+	res.redirect('/workshops/' + req.body._id);
+});	
+	
+	
+router.get('/map/mapdata/:id', function(req, res, next){
+	console.log('Get data for a d3 actor map');
+	console.log('Workshop ID: ' + req.params.id);
+    // Set our internal DB variable
+    var db = req.db;
+	
+    // Set our collection
+    var collection = db.get('workshops');
+	
+	collection.findById(req.params.id, function (err, post) {
+		console.log(JSON.stringify(post));
+		res.send(JSON.stringify(post));
+	});
+});
 
 /* GET /actors/map */
 router.get('/map', function(req, res, next) {
@@ -161,6 +220,11 @@ router.get('/map', function(req, res, next) {
 
 router.get('/map2', function(req, res, next) {
 	res.render('actormap2');
+});
+
+router.get('/map/map3/:id', function(req, res, next) {
+	console.log('Get the details of Workshop ID:' + req.params.id);
+	res.render('actormap', {workshop_id: req.params.id});
 });
 
 /* GET /actors/map */

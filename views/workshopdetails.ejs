@@ -3,17 +3,37 @@
 	<head>
 		<% include partials/head %>
 
+		<% var actorDropdown = "";
+			var counter = 0;
+			if(workshop.nodes) { 
+				workshop.nodes.forEach(function(node) { 
+					actorDropdown = actorDropdown + "<option value='" + counter + "'>" + node.name + "</option>";
+					counter++;
+				});
+			};
+		%>
+		
 		<script>
 		var counter = 1;
 		
 		function addInput(divName){
     	
-        	var newdiv = document.createElement('div');
-          	newdiv.innerHTML = "<label for='name'>Name: </label> <input class='form-control' type='text' name='name'>";
-          	document.getElementById(divName).appendChild(newdiv);
-          	counter++;
+			if(divName == 'dynamicActor') {
+        		var newdiv = document.createElement('div');
+          		newdiv.innerHTML = "<label for='name'>Name: </label> <input class='form-control' type='text' name='name'>";
+          		document.getElementById(divName).appendChild(newdiv);
+          		counter++;
+			} else if(divName == 'dynamicRelationship') {
+        		var newdiv = document.createElement('div');
+          		newdiv.innerHTML = "<label for='source'>Source: </label><select name='source'><%- actorDropdown %></select> <label for='target'>Target: </label><select name='target'><%- actorDropdown %></select> <label for='value'>Value: </label> <input type='text' name='value' length='5'>";
+          		document.getElementById(divName).appendChild(newdiv);
+          		counter++;
+			} else {
+			
+			}
 		}
 		</script>
+		
 	</head>
 	<body class="container">
 		<header>
@@ -48,7 +68,7 @@
 				<div id="dynamicActor">
           		
      			</div>
-				<input type="button" value="+ actor" onClick="addInput('dynamicActor');">
+				<p><input type="button" value="+ actor" onClick="addInput('dynamicActor');"></p>
 			
 				</div>
 				
@@ -56,6 +76,25 @@
   	             <button type="submit" name="submit" id="submit" class="btn btn-default">update actors</button>
   	          </p>
 			  
+			</form>
+			
+			<hr>
+			<p>Add Relationships</p>
+			<form method="post" action="/actors/addrel2">
+			<input type="hidden" name="_id" value="<%= workshop._id %>" />
+				<div class="form-group">
+				<div id="dynamicRelationship">
+          		
+     			</div>
+				<p><input type="button" value="+ relationship" onClick="addInput('dynamicRelationship');"></p>
+			
+				</div>
+				
+  	          <p>
+  	             <button type="submit" name="submit" id="submit" class="btn btn-default">update relationships</button>
+  	          </p>
+			  
+			  <p><a href="/actors/map/map3/<%= workshop._id %>">View network Map</a></p>
 			</form>
 		 	</main>
 		
