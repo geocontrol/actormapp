@@ -113,18 +113,6 @@
      		</div>
      		<input type="button" value="+ parameter" onClick="addInput('dynamicInput');">
 
-     		<hr>
-     		<p> Relationships
-     		<div id="dynamicRelationInput">
-     		<% if(actor.actorTarget) {%>
-			<% actor.actorTarget.forEach(function(el, index) { %>
-				<%= actor.name %> is related to <%- actordropdown.replace("<option value='" + el + "'>", "<option value='" + el + "' selected>"); %> as <input type="text" id="relTarget[]" name="relTarget[]" value="<%= actor.relTarget[index] %>"></p>
-			<% }); %>
-			<% } %>
-          		 <%= actor.name %> is related to <%- actordropdown %> as <input type="text" id="relTarget" name="relTarget[]">
-     		</div>
-     		<input type="button" value="+ relationship" onClick="addInput('dynamicRelationInput');">
-		   
 
 			<hr>
 			<p> Images

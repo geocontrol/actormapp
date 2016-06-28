@@ -67,7 +67,7 @@ svg.append("svg:defs").selectAll("marker")
       .data(graph.nodes)
     .enter().append("circle")
       .attr("class", "node")
-      .attr("r", 3)
+      .attr("r", 6)
       .call(force.drag)
 	  .on("click", clack);
 	  

@@ -53,7 +53,7 @@
 				<% if(workshop.nodes) { %>
 	           		<% workshop.nodes.forEach(function(node) { %>
 
-				 		<li><a href="/workshops/"><%= node.name %></a></li>
+				 		<li><a href="/actors/<%= node._id %>"><%= node.name %></a></li>
 
 					<% }); %>
 				<% }; %>

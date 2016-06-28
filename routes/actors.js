@@ -78,6 +78,7 @@ router.post('/add2', function(req, res, next) {
 	
     // Set our collection
     var collection = db.get('workshops');
+	var actorscollection = db.get('actors');
 
 	collection.findById(req.body._id, function (err, post) {
 		if (err) return next(err);
@@ -97,16 +98,25 @@ router.post('/add2', function(req, res, next) {
 				var JSONname = {'name': name};
 				console.log(JSON.stringify(JSONname));
 				
+				actorscollection.insert(JSONname, {w: 1}, function(err, doc){
+					JSONname = {'name': name, 'id': doc._id};
+					
+				});
 				JSONnodes.nodes.push(JSONname);
 				console.log(JSON.stringify(JSONnodes));
 			});
 		} else {
 			var JSONname = {'name': req.body.name};
 			
+			actorscollection.insert(JSONname, {w: 1}, function(err, doc){
+				JSONname = {'name': name, 'id': doc[0]._id};
+				
+			});
 			JSONnodes.nodes.push(JSONname);
 			console.log(JSON.stringify(JSONnodes));
 		};
-			
+		
+		console.log(JSON.stringify(JSONnodes));
 		collection.update({_id: req.body._id},{$set: JSONnodes}, {w: 1}, function(err, count, status){
 			console.log(status);
 		});
