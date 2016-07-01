@@ -143,24 +143,24 @@ router.post('/addrel2', function(req, res, next) {
 	 	console.log('Workshop : ' + post);
 		if (post.links) {
 			var JSONlinks = {'links':post.links};
-			console.log(JSON.stringify(JSONlinks));
+			console.log('All Links: ' + JSON.stringify(JSONlinks));
 		} else {
 			var JSONlinks = {'links':[]};
-			console.log(JSON.stringify(JSONlinks));
+			console.log('All Links: ' + JSON.stringify(JSONlinks));
 		}
 
 		if (Array.isArray(req.body.source)) {
 			for(var index in req.body.source) {
 				JSONrel = {'source': Number(req.body.source[index]), 'target': Number(req.body.target[index]), 'value': Number(req.body.value[index])};
-				console.log(JSON.stringify(JSONrel));
+				console.log('Relationship: ' + JSON.stringify(JSONrel));
 				
 				JSONlinks.links.push(JSONrel);
-				console.log(JSON.stringify(JSONlinks));
+				console.log('All Links: ' + JSON.stringify(JSONlinks));
 			};
 		} else {
 			JSONrel = {'source': req.body.source, 'target': req.body.target, 'value': req.body.value};
 			JSONlinks.links.push(JSONrel);
-			console.log(JSON.stringify(JSONlinks));
+			console.log('All Links: ' + JSON.stringify(JSONlinks));
 		};
 			
 		collection.update({_id: req.body._id},{$set: JSONlinks}, {w: 1}, function(err, count, status){
