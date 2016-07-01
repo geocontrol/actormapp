@@ -158,7 +158,7 @@ router.post('/addrel2', function(req, res, next) {
 				console.log('All Links: ' + JSON.stringify(JSONlinks));
 			};
 		} else {
-			JSONrel = {'source': req.body.source, 'target': req.body.target, 'value': req.body.value};
+			JSONrel = {'source': Number(req.body.source), 'target': Number(req.body.target), 'value': Number(req.body.value)};
 			JSONlinks.links.push(JSONrel);
 			console.log('All Links: ' + JSON.stringify(JSONlinks));
 		};
