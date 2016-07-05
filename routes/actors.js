@@ -151,14 +151,14 @@ router.post('/addrel2', function(req, res, next) {
 
 		if (Array.isArray(req.body.source)) {
 			for(var index in req.body.source) {
-				JSONrel = {'source': Number(req.body.source[index]), 'target': Number(req.body.target[index]), 'value': Number(req.body.value[index])};
+				JSONrel = {'source': Number(req.body.source[index]), 'target': Number(req.body.target[index]), 'value': Number(req.body.value[index]), 'label': req.body.label[index]};
 				console.log('Relationship: ' + JSON.stringify(JSONrel));
 				
 				JSONlinks.links.push(JSONrel);
 				console.log('All Links: ' + JSON.stringify(JSONlinks));
 			};
 		} else {
-			JSONrel = {'source': Number(req.body.source), 'target': Number(req.body.target), 'value': Number(req.body.value)};
+			JSONrel = {'source': Number(req.body.source), 'target': Number(req.body.target), 'value': Number(req.body.value), 'label': req.body.label};
 			JSONlinks.links.push(JSONrel);
 			console.log('All Links: ' + JSON.stringify(JSONlinks));
 		};

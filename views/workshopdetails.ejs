@@ -16,6 +16,21 @@
 		<script>
 		var counter = 1;
 		
+		var workshopJSON = <%- JSON.stringify(workshop) %>;
+		
+		function listRelationships(){
+			//var newdiv = document.createElement('div');
+			var newinnerHTML = "";
+			
+			workshopJSON.links.forEach(function(link) {
+
+			 		newinnerHTML = newinnerHTML + '<li>' + workshopJSON.nodes[link.source].name + ' is related to ' +  workshopJSON.nodes[link.target].name + ' (Value: ' + link.target + ') <button type="delete" name="deleteRel" id="deleteRel" class="btn btn-default" onClick="deleteRelationship(' + workshopJSON.links.indexOf(link) + ')">delete</button></li>';
+
+			});
+			//alert(newdiv.innerHTML);
+			document.getElementById('dynamicRelList').innerHTML = newinnerHTML;
+		};
+		
 		function addInput(divName){
     	
 			if(divName == 'dynamicActor') {
@@ -25,17 +40,38 @@
           		counter++;
 			} else if(divName == 'dynamicRelationship') {
         		var newdiv = document.createElement('div');
-          		newdiv.innerHTML = "<label for='source'>Source: </label><select name='source'><%- actorDropdown %></select> <label for='target'>Target: </label><select name='target'><%- actorDropdown %></select> <label for='value'>Value: </label> <input type='text' name='value' length='5'>";
+          		newdiv.innerHTML = "<label for='source'>Source: </label><select name='source'><%- actorDropdown %></select> <label for='target'>Target: </label><select name='target'><%- actorDropdown %></select> <label for='value'>Value(Number): </label> <input type='text' name='value' length='5'> <label for='label'>Label: </label><input type='text' name='label' length='10'>";
           		document.getElementById(divName).appendChild(newdiv);
           		counter++;
 			} else {
 			
 			}
-		}
+		};
+		
+		function deleteRelationship(index){
+			//alert(index);
+			console.log(workshopJSON.links);
+			
+			workshopJSON.links.splice(index, 1);
+
+			console.log(workshopJSON.links);
+			var string = JSON.stringify(workshopJSON);
+			var xhr = new XMLHttpRequest();
+			xhr.open("POST", "/workshops/relupdate", true);
+			xhr.setRequestHeader('Content-type','application/json; charset=utf-8');
+			xhr.setRequestHeader("Content-length", string.length);
+			xhr.setRequestHeader("Connection", "close");
+			xhr.send(string);
+			
+			listRelationships();
+			document.getElementById('actord3map').contentDocument.location.reload(true);
+		};
+		
+		
 		</script>
 		
 	</head>
-	<body class="container">
+	<body class="container" onload="listRelationships();">
 		<header>
 			<% include partials/header %>
 		</header>
@@ -79,6 +115,14 @@
 			</form>
 			
 			<hr>
+			<h2>Relationships</h2>
+		
+			<ul>
+			<div id="dynamicRelList">
+			
+			</div>
+			</ul>
+			<hr>
 			<p>Add Relationships</p>
 			<form method="post" action="/actors/addrel2">
 			<input type="hidden" name="_id" value="<%= workshop._id %>" />
@@ -100,7 +144,7 @@
 			
   		  <h1>Actor Network</h1>
 
-  		    <iframe sandbox="allow-popups allow-scripts allow-forms allow-same-origin allow-popups-to-escape-sandbox" src="/actors/map/map3/<%= workshop._id %>" marginwidth="0" marginheight="0" style="height:500px; width:80%" scrolling="no"></iframe>
+  		    <iframe sandbox="allow-popups allow-scripts allow-forms allow-same-origin allow-popups-to-escape-sandbox" src="/actors/map/map3/<%= workshop._id %>" marginwidth="0" marginheight="0" style="height:500px; width:80%" scrolling="no" id="actord3map"></iframe>
 
   		  <div class="index-pop">
   		    <a target="_blank" title="Open map a new window." href="/actors/map/map3/<%= workshop._id %>">Open<svg height="16" width="12"><path d="M11 10h1v3c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V3c0-0.55 0.45-1 1-1h3v1H1v10h10V10zM6 2l2.25 2.25-3.25 3.25 1.5 1.5 3.25-3.25 2.25 2.25V2H6z"></path></svg></a>

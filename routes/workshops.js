@@ -80,4 +80,25 @@ router.get('/:id', function(req, res, next) {
 	});
 });
 
+router.post('/relupdate', function(req, res, next) {
+	console.log('Update the relationships');
+	console.log(req.body);
+	
+	workshopJSON = req.body;
+	
+	console.log('Workshop ID: ' + workshopJSON._id);
+    // Set our internal DB variable
+    var db = req.db;
+
+    // Set our collection
+    var collection = db.get('workshops');
+	
+	collection.update({'_id': workshopJSON._id}, workshopJSON, function(err, results) {
+		if (err) console.log(err);
+        console.log('DB UPDATE: ' + results);
+       
+	   	res.send('200');
+   });
+});
+
 module.exports = router;
