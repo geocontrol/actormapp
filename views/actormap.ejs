@@ -12,6 +12,16 @@
   stroke-opacity: .6;
 }
 
+.links line {
+  stroke: #999;
+  stroke-opacity: 0.6;
+}
+
+.nodes circle {
+  stroke: #fff;
+  stroke-width: 1.5px;
+}
+
 </style>
 <body>
 <script src="//d3js.org/d3.v3.min.js"></script>
@@ -40,6 +50,7 @@ d3.json("/actors/map/mapdata/<%= workshop_id %>", function(error, graph) {
   force
       .nodes(graph.nodes)
       .links(graph.links)
+	  .linkDistance(80)
       .start();
 
 // build the arrow.
@@ -61,8 +72,8 @@ svg.append("svg:defs").selectAll("marker")
     .enter().append("line")
       .attr("class", "link")
 	  .attr("marker-end", "url(#end)")
-      .style("stroke-width", function(d) { return Math.sqrt(d.value); });
-
+	  .style("stroke-width", function(d) { return Math.sqrt(d.value); });
+	  
   var node = svg.selectAll(".node")
       .data(graph.nodes)
     .enter().append("circle")

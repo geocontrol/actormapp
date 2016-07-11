@@ -24,7 +24,7 @@
 			
 			workshopJSON.links.forEach(function(link) {
 
-			 		newinnerHTML = newinnerHTML + '<li>' + workshopJSON.nodes[link.source].name + ' is related to ' +  workshopJSON.nodes[link.target].name + ' (Value: ' + link.target + ') <button type="delete" name="deleteRel" id="deleteRel" class="btn btn-default" onClick="deleteRelationship(' + workshopJSON.links.indexOf(link) + ')">delete</button></li>';
+			 		newinnerHTML = newinnerHTML + '<li>' + workshopJSON.nodes[link.source].name + ' is related to ' +  workshopJSON.nodes[link.target].name + ' (Value: ' + link.value + ') <button type="delete" name="deleteRel" id="deleteRel" class="btn btn-default" onClick="deleteRelationship(' + workshopJSON.links.indexOf(link) + ')">delete</button></li>';
 
 			});
 			//alert(newdiv.innerHTML);

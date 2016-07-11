@@ -237,6 +237,11 @@ router.get('/map/map3/:id', function(req, res, next) {
 	res.render('actormap', {workshop_id: req.params.id});
 });
 
+router.get('/map/map4/:id', function(req, res, next) {
+	console.log('Get the details of Workshop ID:' + req.params.id);
+	res.render('actormap3', {workshop_id: req.params.id});
+});
+
 /* GET /actors/map */
 router.get('/map2data', function(req, res, next) {
 	console.log('Get data for a d3 actor map');
