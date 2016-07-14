@@ -242,6 +242,37 @@ router.get('/map/map4/:id', function(req, res, next) {
 	res.render('actormap3', {workshop_id: req.params.id});
 });
 
+router.get('/map/map5/:id', function(req, res, next) {
+	console.log('Get the details of Workshop ID:' + req.params.id);
+	res.render('actormap5', {workshop_id: req.params.id});
+});
+
+router.get('/map/map6/:id', function(req, res, next) {
+	console.log('Get the details of Workshop ID:' + req.params.id);
+	res.render('actormap6', {workshop_id: req.params.id});
+});
+
+router.get('/map/sankey/:id', function(req, res, next) {
+	console.log('Get the details of Workshop ID:' + req.params.id);
+	res.render('sankeytest', {workshop_id: req.params.id});
+});
+
+router.get('/map/mapdata5/:id', function(req, res, next){
+	console.log('Get data for a d3 actor map');
+	console.log('Workshop ID: ' + req.params.id);
+    // Set our internal DB variable
+    var db = req.db;
+	
+    // Set our collection
+    var collection = db.get('workshops');
+	
+	collection.findById(req.params.id, function (err, post) {
+		console.log(JSON.stringify(post));
+		res.send(JSON.stringify(post));
+	});
+});
+
+
 /* GET /actors/map */
 router.get('/map2data', function(req, res, next) {
 	console.log('Get data for a d3 actor map');
