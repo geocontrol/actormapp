@@ -8,16 +8,19 @@ var multer = require('multer');
 var upload = multer({ dest: 'uploads/' });
 var sizeOf = require('image-size');
 require('string.prototype.startswith');
+var passport = require('passport');
+var Account = require('../models/account');
 
-/* GET /workshops listing */
+/* GET /projects listing */
 router.get('/', function(req, res, next) {
 	// Set our internal DB variable
     var db = req.db;
     // Set our collection
     var collection = db.get('projects');
 
-    collection.find({}, function (err, docs){
-		res.render('projectshome', {title: 'Actor Mapping - Projects', projects: docs});
+    collection.find({user_id: req.user._id}, function (err, docs){
+		console.log('Returned Projects : ' + JSON.stringify(docs));
+		res.render('projectshome', {title: 'Actor Mapping - Projects', projects: docs, user: req.user });
 	});		
 });
 
@@ -42,7 +45,7 @@ router.post('/add', function(req, res, next) {
     var db = req.db;
 
     // Take the parameters into a JSON object
-	var Project = {'name' : req.body.name};
+	var Project = {'name' : req.body.name, 'user_id' : req.user._id};
 
 	console.log('JSON - Project : ' + JSON.stringify(Project));
 
@@ -57,7 +60,7 @@ router.post('/add', function(req, res, next) {
         }
         else {
             // And forward to success page
-            res.redirect("/projects");
+            res.redirect("/projects/" + doc._id);
         }
     });
 });
@@ -76,7 +79,7 @@ router.get('/:id', function(req, res, next) {
 	collection.findById(req.params.id, function (err, post) {
 		if (err) return next(err);
 	 	console.log('Project : ' + post);
-		res.render('projectdetails', {title: 'Actor Mapping - Projects', project: post});
+		res.render('projectdetails', {title: 'Actor Mapping - Projects', project: post, user: req.user});
 	});
 });
 
