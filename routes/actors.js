@@ -128,8 +128,11 @@ router.post('/add2', function(req, res, next) {
 				var JSONname = {'name': req.body.name};
 			
 				actorscollection.insert(JSONname, {w: 1}, function(err, doc){
+					if(err){
+						console.log(err);
+					} else {
 					JSONname = {'name': req.body.name, 'id': doc._id, '_id': doc._id};
-				
+				}
 				});
 				JSONnodes.nodes.push(JSONname);
 				console.log(JSON.stringify(JSONnodes));

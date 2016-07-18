@@ -116,10 +116,14 @@
 
 			<hr>
 			<p> Images
-			<% if(actor.imagepath) {%>
-			<% actor.imagepath.forEach(function(el, index) { %>
+			<% if(actor.imagepath) { %>
+			<%	if (Array.isArray(actor.imagepath)) {%>
+			<% 		actor.imagepath.forEach(function(el, index) { %>
 			<p><input type='hidden' name='imagepath' value='<%= el %>'><img src='/<%= el %>' height='150' width='150'>
-			<% }); %>
+			<% 		}); %>
+			<% 	} else { %>
+			<p><input type='hidden' name='imagepath' value='<%= actor.imagepath %>'><img src='/<%= actor.imagepath %>' height='150' width='150'>	
+			<% 	}; %>
 			<% } %>
 			<hr>
 			<div id="images">
