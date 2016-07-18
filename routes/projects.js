@@ -26,38 +26,42 @@ router.get('/', function(req, res, next) {
 	} else {
 		// No user details rediect to login
 		res.redirect('/login');
-	}
-		
+	}	
 });
 
 
 /* POST /projects/add */
 router.post('/add', function(req, res, next) {
-	console.log('Add a Project:');
-	console.log(req.body);
+	if(req.user) {
+		console.log('Add a Project:');
+		console.log(req.body);
 
-    // Set our internal DB variable
-    var db = req.db;
+	    // Set our internal DB variable
+	    var db = req.db;
 
-    // Take the parameters into a JSON object
-	var Project = {'name' : req.body.name, 'user_id' : req.user._id};
+	    // Take the parameters into a JSON object
+		var Project = {'name' : req.body.name, 'user_id' : req.user._id};
 
-	console.log('JSON - Project : ' + JSON.stringify(Project));
+		console.log('JSON - Project : ' + JSON.stringify(Project));
 
-    // Set our collection
-    var collection = db.get('projects');
+	    // Set our collection
+	    var collection = db.get('projects');
 
-    // Submit to the DB
-    collection.insert(Project, function (err, doc) {
-        if (err) {
-            // If it failed, return error
-            res.send("There was a problem adding the information to the database.");
-        }
-        else {
-            // And forward to success page
-            res.redirect("/projects/" + doc._id);
-        }
-    });
+	    // Submit to the DB
+	    collection.insert(Project, function (err, doc) {
+	        if (err) {
+	            // If it failed, return error
+	            res.send("There was a problem adding the information to the database.");
+	        }
+	        else {
+	            // And forward to success page
+	            res.redirect("/projects/" + doc._id);
+	        }
+	    });
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}
 });
 
 /* GET /projects/id */
