@@ -7,7 +7,11 @@
 			var counter = 0;
 			if(workshop.nodes) { 
 				workshop.nodes.forEach(function(node) { 
-					actorDropdown = actorDropdown + "<option value='" + counter + "'>" + node.name + "</option>";
+					if(node.Name) {
+						actorDropdown = actorDropdown + "<option value='" + counter + "'>" + node.Name + "</option>";
+					} else {
+						actorDropdown = actorDropdown + "<option value='" + counter + "'>" + node.name + "</option>";
+					}
 					counter++;
 				});
 			};
@@ -22,9 +26,10 @@
 			//var newdiv = document.createElement('div');
 			var newinnerHTML = "";
 			
+			console.log(JSON.stringify(workshopJSON.links));
 			workshopJSON.links.forEach(function(link) {
-
-			 		newinnerHTML = newinnerHTML + '<li>' + workshopJSON.nodes[link.source].name + ' is related to ' +  workshopJSON.nodes[link.target].name + ' (Value: ' + link.value + ') <button type="delete" name="deleteRel" id="deleteRel" class="btn btn-default" onClick="deleteRelationship(' + workshopJSON.links.indexOf(link) + ')">delete</button></li>';
+					console.log(JSON.stringify(link));
+			 		newinnerHTML = newinnerHTML + '<li>' + link.source + ' is related to ' +  link.target + ' (Value: ' + link.value + ') <button type="delete" name="deleteRel" id="deleteRel" class="btn btn-default" onClick="deleteRelationship(' + workshopJSON.links.indexOf(link) + ')">delete</button></li>';
 
 			});
 			//alert(newdiv.innerHTML);
