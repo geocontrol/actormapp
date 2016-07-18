@@ -146,4 +146,66 @@ router.post('/relupdate', function(req, res, next) {
 
 });
 
+/* GET /workshops/delete/id */
+router.get('/delete/:id', function(req, res, next) {
+	if(req.user) {
+		console.log('Delete the Workshop : ' + req.params.id);
+
+		var id = req.params.id;
+		console.log('ID: ' + id);
+		// Set our internal DB variable
+	    var db = req.db;
+	    // Set our collection
+	    var collection = db.get('workshops');
+		var projectcollection = db.get('projects');
+		
+	    console.log(collection);
+		
+		// Get the workshop record
+		collection.findById(req.params.id, function (err, post) {
+			if (err) return next(err);
+		 	console.log('Workshop : ' + post);
+			
+			// Can check User_id
+			
+			// Get the project_id
+			project_id = post.project_id;
+			
+			// Remove the record
+		    collection.remove({ "_id": req.params.id }, function (err, result){
+		    	if(err){
+		    		console.log(err);
+		    	} else {
+					
+					// Update the project record
+					projectcollection.findById(project_id, function (err, post) {
+						if (err) return next(err);
+					 	console.log('Project : ' + post);
+					
+						var index = null;
+						for (var i =0; i < post.workshops.length; i++) {
+						    if (post.workshops[i].id === req.params.id) {
+						        index = i;
+						        break;
+							}
+						}
+						if (index !== null) {
+						    post.workshops.splice(index, 1);
+						}
+						
+						projectcollection.update({_id: project_id},post);
+					});
+		    		res.redirect('/projects/' + project_id);
+		    	}
+			});
+		});	
+		
+	    
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}
+});
+
+
 module.exports = router;

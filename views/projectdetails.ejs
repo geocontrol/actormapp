@@ -27,7 +27,7 @@
 			<% if(project.workshops) { %>	 
            <% project.workshops.forEach(function(workshop) { %>
 
-			 <li><a href="/workshops/<%= workshop.id %>"><%= workshop.name %></a></li>
+			 <li><a href="/workshops/<%= workshop.id %>"><%= workshop.name %></a> <a href="/workshops/delete/<%= workshop.id %>">X</a></li>
 
 		<% }); %>
 			<% } %>
