@@ -99,8 +99,7 @@ router.post('/add2', function(req, res, next) {
 				console.log(JSON.stringify(JSONname));
 				
 				actorscollection.insert(JSONname, {w: 1}, function(err, doc){
-					JSONname = {'name': name, 'id': doc._id};
-					
+					JSONname = {'name': name, 'id': doc._id, '_id': doc._id};
 				});
 				JSONnodes.nodes.push(JSONname);
 				console.log(JSON.stringify(JSONnodes));
@@ -109,7 +108,7 @@ router.post('/add2', function(req, res, next) {
 			var JSONname = {'name': req.body.name};
 			
 			actorscollection.insert(JSONname, {w: 1}, function(err, doc){
-				JSONname = {'name': name, 'id': doc[0]._id};
+				JSONname = {'name': name, 'id': doc[0]._id, '_id': doc[0]._id};
 				
 			});
 			JSONnodes.nodes.push(JSONname);

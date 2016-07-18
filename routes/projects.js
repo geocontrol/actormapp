@@ -13,28 +13,23 @@ var Account = require('../models/account');
 
 /* GET /projects listing */
 router.get('/', function(req, res, next) {
-	// Set our internal DB variable
-    var db = req.db;
-    // Set our collection
-    var collection = db.get('projects');
+	if(req.user) {
+		// Set our internal DB variable
+	    var db = req.db;
+	    // Set our collection
+	    var collection = db.get('projects');
 
-    collection.find({user_id: req.user._id}, function (err, docs){
-		console.log('Returned Projects : ' + JSON.stringify(docs));
-		res.render('projectshome', {title: 'Actor Mapping - Projects', projects: docs, user: req.user });
-	});		
+	    collection.find({user_id: req.user._id}, function (err, docs){
+			console.log('Returned Projects : ' + JSON.stringify(docs));
+			res.render('projectshome', {title: 'Actor Mapping - Projects', projects: docs, user: req.user });
+		});
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}
+		
 });
 
-/* GET /projects/add */
-router.get('/add', function(req, res, next) {
-	// Set our internal DB variable
-    var db = req.db;
-    // Set our collection
-    var collection = db.get('projects');
-
-    collection.find({}, function (err, docs){
-		res.render('projectshome', {title: 'Actor Mapping - Projects', projects: docs});
-	});	
-});
 
 /* POST /projects/add */
 router.post('/add', function(req, res, next) {
@@ -70,17 +65,23 @@ router.get('/:id', function(req, res, next) {
 	console.log('Get the details of an Project:' + req.params.id);
 	console.log(req.body);
 
-    // Set our internal DB variable
-    var db = req.db;
+	if(req.user) {
+	    // Set our internal DB variable
+	    var db = req.db;
 
-    // Set our collection
-    var collection = db.get('projects');
+	    // Set our collection
+	    var collection = db.get('projects');
 
-	collection.findById(req.params.id, function (err, post) {
-		if (err) return next(err);
-	 	console.log('Project : ' + post);
-		res.render('projectdetails', {title: 'Actor Mapping - Projects', project: post, user: req.user});
-	});
+		collection.findById(req.params.id, function (err, post) {
+			if (err) return next(err);
+		 	console.log('Project : ' + post);
+			res.render('projectdetails', {title: 'Actor Mapping - Projects', project: post, user: req.user});
+		});
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}
+    
 });
 
 

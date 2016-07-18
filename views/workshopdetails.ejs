@@ -88,9 +88,11 @@
 				<ol>		
 				<% if(workshop.nodes) { %>
 	           		<% workshop.nodes.forEach(function(node) { %>
-
-				 		<li><a href="/actors/<%= node._id %>"><%= node.name %></a></li>
-
+						<% if(node.Name) { %>
+				 		<li><a href="/actors/<%= node._id %>"><%= node.Name %></a></li>
+						<% } else { %>
+						<li><a href="/actors/<%= node._id %>"><%= node.Name %></a></li>
+						<% } %>
 					<% }); %>
 				<% }; %>
 				</ol>
