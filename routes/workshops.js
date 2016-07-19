@@ -167,7 +167,7 @@ router.get('/delete/:id', function(req, res, next) {
 		 	console.log('Workshop : ' + post);
 			
 			// Can check User_id
-			
+			if(post.project_id) {
 			// Get the project_id
 			project_id = post.project_id;
 			
@@ -177,6 +177,7 @@ router.get('/delete/:id', function(req, res, next) {
 		    		console.log(err);
 		    	} else {
 					
+				
 					// Update the project record
 					projectcollection.findById(project_id, function (err, post) {
 						if (err) return next(err);
@@ -198,6 +199,9 @@ router.get('/delete/:id', function(req, res, next) {
 		    		res.redirect('/projects/' + project_id);
 		    	}
 			});
+			} else {
+				res.redirect('/projects/');
+			}
 		});	
 		
 	    
