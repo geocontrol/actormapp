@@ -29,8 +29,8 @@
 
 <p id="chart">
 
-<script src="https://d3js.org/d3.v4.min.js"></script>
-<script src="sankey2.js"></script>
+<script src="https://d3js.org/d3.v3.min.js"></script>
+<script src="sankey_local.js"></script>
 <script>
 	
 var units = "Widgets";
@@ -61,7 +61,7 @@ var path = sankey.link();
 
 // load the data
 //d3.json("sankey-formatted.json", function(error, graph) {
-d3.json("test.json", function(error, graph) {
+d3.json("sankey-formatted.json", function(error, graph) {
 
   sankey
       .nodes(graph.nodes)
