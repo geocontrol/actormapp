@@ -16,7 +16,7 @@
 		 
 				 
 				<h2>Register</h2>
-				<form method="post" action="/register">
+				<form method="post" action="/register" role="form" data-toggle="validator" class="form-horizontal">
 	 
 		           <% if(typeof(error) !== 'undefined') {%>
 		              <span><%= error %></span>
@@ -27,9 +27,9 @@
 		           <div class="form-group">
 
 				 	<label for="username">username</label>
-		            <input type="text" class="form-control" name="username" id="username"/> <br>
+		            <input type="text" class="form-control" name="username" id="username" required/> <br>
 				 	<label for="password">password</label>
-		            <input type="password" class="form-control" name="password" id="password"/> <br>
+		            <input type="password" class="form-control" name="password" id="password" required/> <br>
 			        <p>
 			           <button type="submit" name="submit" id="submit" class="btn btn-default">Register</button>
 			        </p>

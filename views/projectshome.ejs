@@ -42,7 +42,7 @@
 			</ul>
 		<hr>
 		<h2>Add New Project</h2>
-		<form method="post" action="/projects/add">
+		<form method="post" action="/projects/add" role="form" data-toggle="validator" class="form-horizontal">
 		<input type="hidden" name="_method" value="put" />
 	 
            <% if(typeof(errorMessage) !== 'undefined') {%>
@@ -52,7 +52,7 @@
            <div class="form-group">
 
 		 	<label for="name">Name</label>
-            <input type="text" class="form-control" name="name" id="name"/> <br>
+            <input type="text" class="form-control" name="name" id="name" required/> <br>
 	        <p>
 	           <button type="submit" name="submit" id="submit" class="btn btn-default">Add</button>
 	        </p>

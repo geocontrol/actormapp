@@ -4,16 +4,18 @@
     <div class="container-fluid">
 
         <div class="navbar-header">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="/">
                 Social pattern mapper 
             </a>
         </div>
 
         <ul class="nav navbar-nav">
-            <li><a href="/">Home</a></li>
-			<li><a href="/projects">Projects</a></li>
-			<li> <a href="">|</a> </li>
-			<li><a href="/about">About</a></li>
+			<% if (typeof(user) !== 'undefined') {%>
+				<li><a href="/projects">Projects</a></li>
+				<li> <a href="">|</a> </li>
+			<% } else { %>
+				
+			<% } %>
 			<% if (typeof(user) !== 'undefined') {%>
 				<li><a href=""><%= user.username %></a></li>
 				<li><a href="/logout">Logout</a></li>	
