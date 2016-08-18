@@ -86,29 +86,25 @@
 		</header>
 		
 		<main>
-			<div class="jumbotron">
-			<p>Workshop Details</p>
-			<div>
 
-			<p>Name: <%= workshop.name %>
+				<div class="col-md-6">
+					<h1>Name: <%= workshop.name %></h1>
 
 
-			<h2>Actors</h2>
-				<ol>		
-				<% if(workshop.nodes) { %>
-	           		<% workshop.nodes.forEach(function(node) { %>
-						<% if(node.Name) { %>
-				 		<li><a href="/actors/<%= node._id %>"><%= node.Name %></a></li>
-						<% } else { %>
-						<li><a href="/actors/<%= node._id %>"><%= node.name %></a></li>
-						<% } %>
-					<% }); %>
-				<% }; %>
-				</ol>
+					<h3>Actors</h3>
+					<ol>		
+						<% if(workshop.nodes) { %>
+	           				<% workshop.nodes.forEach(function(node) { %>
+								<% if(node.Name) { %>
+				 					<li><a href="/actors/<%= node._id %>"><%= node.Name %></a></li>
+								<% } else { %>
+									<li><a href="/actors/<%= node._id %>"><%= node.name %></a></li>
+								<% } %>
+							<% }); %>
+						<% }; %>
+					</ol>
 			
-			<hr>
-			
-			<p>Add Actors</p>
+			<h4>Add Actors</h4>
 			<form method="post" action="/actors/add2" class="form-horizontal">
 			<input type="hidden" name="_id" value="<%= workshop._id %>" />
 				<div class="form-group">
@@ -126,15 +122,15 @@
 			</form>
 			
 			<hr>
-			<h2>Relationships</h2>
+			<h3>Relationships</h3>
 		
 			<ul>
 			<div id="dynamicRelList">
 			
 			</div>
 			</ul>
-			<hr>
-			<p>Add Relationships</p>
+
+			<h4>Add Relationships</h4>
 			<form method="post" action="/actors/addrel2" class="form-horizontal">
 			<input type="hidden" name="_id" value="<%= workshop._id %>" />
 				<div class="form-group">
@@ -149,18 +145,23 @@
   	             <button type="submit" name="submit" id="submit" class="btn btn-default">update relationships</button>
   	          </p>
 			  
-			  <p><a href="/actors/map/map6/<%= workshop._id %>">View network Map</a></p>
+			  
 			</form>
 			
-			
-  		  <h1>Actor Network</h1>
+		</div>
+		<div class="col-md-6">
+  		  <h3>Actor Network</h3>
+		  <p><a href="/actors/map/map6/<%= workshop._id %>">View network Map</a></p>
 <% if(workshop.links){ %>
-  		    <iframe sandbox="allow-popups allow-scripts allow-forms allow-same-origin allow-popups-to-escape-sandbox" src="/actors/map/map6/<%= workshop._id %>" marginwidth="0" marginheight="0" style="height:500px; width:80%" scrolling="no" id="actord3map"></iframe>
+  		    <iframe sandbox="allow-popups allow-scripts allow-forms allow-same-origin allow-popups-to-escape-sandbox" src="/actors/map/map6/<%= workshop._id %>" marginwidth="0" marginheight="0" style="height:500px; width:95%" scrolling="no" id="actord3map"></iframe>
 
   		  <div class="index-pop">
   		    <a target="_blank" title="Open map a new window." href="/actors/map/map6/<%= workshop._id %>">Open<svg height="16" width="12"><path d="M11 10h1v3c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V3c0-0.55 0.45-1 1-1h3v1H1v10h10V10zM6 2l2.25 2.25-3.25 3.25 1.5 1.5 3.25-3.25 2.25 2.25V2H6z"></path></svg></a>
   		  </div>
 <% } %>
+		</div>
+
+
 	</main>		
 	<footer>
 		<% include partials/footer %>
