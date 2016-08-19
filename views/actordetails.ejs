@@ -73,68 +73,75 @@
 	
 		</script>
 	</head>
+	
 	<body class="container">
 		<header>
 			<% include partials/header %>
 		</header>
 		
+
 		<main>
-			<div class="jumbotron">
-
-			<div>
-		 
-           <% if(typeof(errorMessage) !== 'undefined') {%>
-              <span><%= errorMessage %></span>
-           <% } %>
-
-
 		<form method="post" action="/actors/<%= actor._id %>" class="form-horizontal">
-		<input type="hidden" name="_method" value="put" />
-		 
-           <% if(typeof(errorMessage) !== 'undefined') {%>
-              <span><%= errorMessage %></span>
-           <% } %>
-		 
-           <div class="form-group">
+          	<input type="hidden" name="_method" value="put" /> 
 		 	<% for (var key in actor) { %>
 		 		<% if(key != '_id' && key != '') { %>
 		 			<% if(key != 'actorTarget' && key != 'relTarget' && key != 'imagepath') { %>
+					<div class="form-group">	
 		 				<label for="<%= key %>"><%= key %></label>
-              			<input type="text" class="form-control" name="<%= key %>" length="5" id="<%= key %>" value="<%= actor[key] %>"/> <a href="/actors/remove/<%= actor._id %>/<%= key %>">X</a><br>
+						<div class="col-sm-10">
+              				<input type="text" class="form-control" name="<%= key %>" length="5" id="<%= key %>" value="<%= actor[key] %>"/> <a href="/actors/remove/<%= actor._id %>/<%= key %>">X</a><br>
+						</div>
+					</div>
 		 			<% } %>
 		 		<% } %>
 			<% } %>
+			
 
-
-			<hr>
-			<p> Add new parameters
-			<div id="dynamicInput">
-          		<input type="text" id="label1" name="label"> <input type="text" id="value1" name="value" length="5"> 
-     		</div>
-     		<input type="button" value="+ parameter" onClick="addInput('dynamicInput');">
-
-
-			<hr>
-			<p> Images
-			<% if(actor.imagepath) { %>
-			<%	if (Array.isArray(actor.imagepath)) {%>
-			<% 		actor.imagepath.forEach(function(el, index) { %>
-			<p><input type='hidden' name='imagepath' value='<%= el %>'><img src='/<%= el %>' height='150' width='150'>
-			<% 		}); %>
-			<% 	} else { %>
-			<p><input type='hidden' name='imagepath' value='<%= actor.imagepath %>'><img src='/<%= actor.imagepath %>' height='150' width='150'>	
-			<% 	}; %>
-			<% } %>
-			<hr>
-			<div id="images">
-
+			<div class="form-group">
+				<div class="col-sm-10">
+					<p> Add new parameters
+						<div id="dynamicInput">	
+          					<input type="text" id="label1" name="label"> <input type="text" id="value1" name="value" length="5"> 
+						</div>
+     			</div>
 			</div>
+			
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+     				<input type="button" value="+ parameter" onClick="addInput('dynamicInput');">
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-sm-10">
+					<p> Images
+						<% if(actor.imagepath) { %>
+							<%	if (Array.isArray(actor.imagepath)) {%>
+								<% 		actor.imagepath.forEach(function(el, index) { %>
+									<p><input type='hidden' name='imagepath' value='<%= el %>'><img src='/<%= el %>' height='150' width='150'>
+								<% 		}); %>
+							<% 	} else { %>
+									<p><input type='hidden' name='imagepath' value='<%= actor.imagepath %>'><img src='/<%= actor.imagepath %>' height='150' width='150'>	
+							<% 	}; %>
+						<% } %>
+				</div>
+			</div>
+			
+			<div class="form-group">
+				<div class="col-sm-10">
+					<div id="images">
 
-	          <p>
-	             <button type="submit" name="submit" id="submit" class="btn btn-default">update</button>
-	          </p>
+					</div>
+				</div>
+			</div>
 			
-			
+			<div class="form-group">
+				<div class="col-sm-offset-2 col-sm-10">
+	          	  <p>
+	             	 <button type="submit" name="submit" id="submit" class="btn btn-default">update</button>
+	          	</p>
+				</div>
+			</div>
 	     </form>
 
 		 <div id="imageupload">
@@ -145,7 +152,8 @@
 		</div>
 
 	     <a href='/actors/delete/<%= actor._id %>' class="btn btn-primary btn-lg" role="button">Delete This Actor</a>
-		 	</main>
+
+	</main>
 		
 	<footer>
 		<% include partials/footer %>

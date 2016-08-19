@@ -20,7 +20,7 @@ router.get('/', function(req, res, next) {
 	    var collection = db.get('workshops');
 
 	    collection.find({}, function (err, docs){
-			res.render('workshopshome', {title: 'Actor Mapping - Workshops', workshops: docs});
+			res.render('workshopshome', {title: 'Actor Mapping - Workshops', workshops: docs, user: req.user });
 		});	
 	} else {
 		// No user details rediect to login
@@ -38,7 +38,7 @@ router.get('/add', function(req, res, next) {
 	    var collection = db.get('workshops');
 
 	    collection.find({}, function (err, docs){
-			res.render('workshopshome', {title: 'Actor Mapping - Workshops', workshops: docs});
+			res.render('workshopshome', {title: 'Actor Mapping - Workshops', workshops: docs, user: req.user });
 		});	
 	} else {
 		// No user details rediect to login
@@ -111,7 +111,7 @@ router.get('/:id', function(req, res, next) {
 		collection.findById(req.params.id, function (err, post) {
 			if (err) return next(err);
 		 	console.log('Workshop : ' + post);
-			res.render('workshopdetails', {title: 'Actor Mapping - Workshops', workshop: post});
+			res.render('workshopdetails', {title: 'Actor Mapping - Workshops', workshop: post, user: req.user });
 		});	
 	} else {
 		// No user details rediect to login

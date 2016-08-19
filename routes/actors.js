@@ -20,7 +20,7 @@ router.get('/', function(req, res, next) {
 	    var collection = db.get('actors');
 
 	    collection.find({}, function (err, docs){
-			res.render('actorshome', {title: 'Actor Mapping - Actors', actors: docs});
+			res.render('actorshome', {title: 'Actor Mapping - Actors', actors: docs, user: req.user});
 		});	
 	} else {
 		// No user details rediect to login
@@ -32,7 +32,7 @@ router.get('/', function(req, res, next) {
 /* GET /actors/add */
 router.get('/add', function(req, res, next) {
 	if(req.user) {
-		res.render('actors', {title: 'Actor Mapping - Add an Actor'});
+		res.render('actors', {title: 'Actor Mapping - Add an Actor', user: req.user});
 	} else {
 		// No user details rediect to login
 		res.redirect('/login');
@@ -319,6 +319,16 @@ router.get('/map/map6/:id', function(req, res, next) {
 	}
 });
 
+router.get('/map/map7/:id', function(req, res, next) {
+	if(req.user) {
+		console.log('Get the details of Workshop ID:' + req.params.id);
+		res.render('actormap7', {workshop_id: req.params.id});
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}
+});
+
 router.get('/map/sankey/:id', function(req, res, next) {
 	if(req.user) {
 		console.log('Get the details of Workshop ID:' + req.params.id);
@@ -425,7 +435,7 @@ router.get('/:id', function(req, res, next) {
 			 	});
 			 	actorDropDown = actorDropDown + "</select>";
 			 	console.log('THE Actor : ' + post);
-				res.render('actordetails', {title: 'Actor Mapping - Actors', actor: post, actordropdown: actorDropDown});
+				res.render('actordetails', {title: 'Actor Mapping - Actors', actor: post, actordropdown: actorDropDown, user: req.user});
 			});
 		});
 	} else {
