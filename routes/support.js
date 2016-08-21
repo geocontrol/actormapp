@@ -132,6 +132,10 @@ router.post('/testdata2', function(req, res, next) {
 					// Add all the actors to the Workshop document (nodes)
 					// Create a link where necessary
 					// Create an Actor stub
+					actor['project_id'] = req.body.project_id;
+					actor['workshop_name'] = req.body.name;
+					actor['user_id'] = req.user._id;
+					
 					actorscollection.insert(actor, {w: 1}, function(err, doc){
 						actor._id = doc._id;
 					});
