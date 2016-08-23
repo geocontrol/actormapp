@@ -19,8 +19,8 @@ var database = require('./database');
 var mongoose = require('mongoose');
 var mongodb = require('mongodb');
 var monk = require('monk');
-//var db = monk('mongodb://localhost:27017/actorMap');
-var db = monk('mongodb://db:27017/actorMap');
+var db = monk('mongodb://localhost:27017/actorMap');
+//var db = monk('mongodb://db:27017/actorMap');
 
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
@@ -74,8 +74,8 @@ passport.serializeUser(Account.serializeUser());
 passport.deserializeUser(Account.deserializeUser());
 
 // mongoose
-//mongoose.connect('mongodb://localhost:27017/actorMap');
-mongoose.connect('mongodb://db:27017/actorMap');
+mongoose.connect('mongodb://localhost:27017/actorMap');
+//mongoose.connect('mongodb://db:27017/actorMap');
 
 app.use('/', routes);
 app.use('/users', users);
