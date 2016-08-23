@@ -7,7 +7,6 @@
 		<style>
 		#svg
 		{
-		    position: absolute;
 		    top: 250px;
 		}
 		
@@ -16,6 +15,10 @@
 		  stroke-width: 1.5px;
 		}
 
+      	.node:not(:hover) .nodetext {
+        	display: none;
+      	}
+		
 		.link {
 		  stroke: #999;
 		  stroke-width: 1.5px;
@@ -24,18 +27,9 @@
 		</style>
 
 		    <style>
-		      @import url(http://fonts.googleapis.com/css?family=Source+Code+Pro:400,600);
-		      body {font-family: "Source Code Pro", Consolas, monaco, monospace; line-height: 160%; font-size: 16px;  margin: 0; }
-		      path.link {
-		        fill: none;
-		        stroke-width: 2px;
-		      }
-		      .node:not(:hover) .nodetext {
-		        display: none;
-		      }
 		      h1 { font-size: 36px; margin: 10px 0; text-transform: uppercase; font-weight: normal;}
 		      h2, h3 { font-size: 18px; margin: 5px 0 ; font-weight: normal;}
-		      header {padding: 20px; position: absolute; top: 0; left: 0;}
+
 		      a:link { color: #EE3124; text-decoration: none;}
 		      a:visited { color: #EE3124; }
 		      a:hover { color: #A4CD39; text-decoration: underline;}
@@ -43,26 +37,30 @@
 		    </style>
 		
 	</head>
-
-<body>
 	
 	<body class="container">
 		<header>
 			<% include partials/header %>
-			
-
-			
+						
 		</header>
 <main>
 	        <h1>Actor network map</h1>
 	        <h2>Click to view their profile</h2>
 
-<svg id="svg" width="960" height="500"></svg>
+<div>
+<svg id="svg" width="940" height="800"></svg>
+
 <script src="//d3js.org/d3.v4.min.js"></script>
 <script>
 
-var width = 960,
-    height = 500,
+// some colour variables
+  var tcBlack = "#130C0E";
+
+
+var width = 940,
+    height = 800,
+    x_browser = 20,
+    y_browser = 25,
     radius = 6;
 
 var svg = d3.select("svg"),
@@ -105,15 +103,23 @@ d3.json("/actors/map/mapdata5/<%= workshop_id %>", function(error, graph) {
 	  
   var images = node.append("svg:image")
       .attr("xlink:href", "/lego_pic.png")
-      .attr("x", function(d) { return -25;})
-      .attr("y", function(d) { return -25;})
+      .attr("x", -8)
+      .attr("y", -8)
       .attr("height", 20)
       .attr("width", 20);
 
+//  node.append("text")
+//      .attr("dx", 10)
+//      .attr("dy", ".20em")
+//      .text(function(d) { return d.Name });
+	  
+  // Append hero name on roll over next to the node as well
   node.append("text")
-      .attr("dx", 12)
-      .attr("dy", ".35em")
-      .text(function(d) { return d.Name });
+      .attr("class", "nodetext")
+      .attr("x", x_browser)
+      .attr("y", y_browser)
+      .attr("fill", tcBlack)
+      .text(function(d) { return d.Name; });
 	  
 // make the image grow a little on mouse over and add the text details on click
 var setEvents = node
@@ -127,23 +133,38 @@ var setEvents = node
           // select element in current context
           d3.select( this )
             .transition()
-            .attr("r", 12);
+      	    .attr("x", -8)
+      	    .attr("y", -8)
+            .attr("height", 100)
+            .attr("width", 100);
         })
         // set back
         .on( 'mouseleave', function() {
           d3.select( this )
             .transition()
-            .attr("r", 6);
+      	    .attr("x", -8)
+      	    .attr("y", -8)
+            .attr("height", 20)
+            .attr("width", 20);
         });
 });
 
 function ticked() {
+  node.attr("transform", function(d) {
+	  //var r = 16;
+	  d.x = Math.max(radius, Math.min(width - radius, d.x));
+	  d.y = Math.max(radius, Math.min(height - radius, d.y));
+	  return "translate(" + d.x + "," + d.y + ")"
+  });	
+
   link.attr("x1", function(d) { return d.source.x; })
       .attr("y1", function(d) { return d.source.y; })
       .attr("x2", function(d) { return d.target.x; })
       .attr("y2", function(d) { return d.target.y; });
 	  
-node.attr("transform", function(d) { return "translate(" + d.x + "," + d.y + ")"; });  
+	//node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
+	//    .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
+    //node.attr("transform", function(d) { return "translate(" + cx + "," + cy + ")"; });  
   //node.attr("cx", function(d) { return d.x = Math.max(radius, Math.min(width - radius, d.x)); })
   //    .attr("cy", function(d) { return d.y = Math.max(radius, Math.min(height - radius, d.y)); });
   //node.attr("cx", function(d) { return d.x; })
@@ -168,17 +189,12 @@ function dragended(d) {
   d.fx = null;
   d.fy = null;
 }
-
-
 </script>
+</div>
 
-&nbsp;
-&nbsp;
-&nbsp;
 </main>
-		<footer>
-			<% include partials/footer %>
-		</footer>
-		
+<footer>
+<% include partials/footer %>
+</footer>		
 </body>
 </html>
