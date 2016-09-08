@@ -128,22 +128,36 @@ router.post('/testdata2', function(req, res, next) {
 				result.forEach(function(actor){
 				
 					if(actor.Name != ''){
-					// Create a record / document for each actor
-					// Add all the actors to the Workshop document (nodes)
-					// Create a link where necessary
-					// Create an Actor stub
-					actor['project_id'] = req.body.project_id;
-					actor['workshop_name'] = req.body.name;
-					actor['user_id'] = req.user._id;
-					
-					actorscollection.insert(actor, {w: 1}, function(err, doc){
-						actor._id = doc._id;
-					});
-					console.log(JSON.stringify(actor));
-					console.log('++++++++++++++++++++++++++++++++++++++++');
-					workshopJSON.nodes.push(actor);
-					//console.dir(workshopJSON, {depth: null, colors: true});
+						var exists = 0;
+						//If the Actor ID actor.ID already in the workshop JSON object then dont need to add again.
+						var  actorID = actor.ID;
+						workshopJSON.nodes.forEach(function(node) {
+							if (node.ID == actorID){
+								exists = 1;								
+							}
+						});
 						
+						if(exists == 1){
+							console.log('EXISTS!');
+						} else {
+							// Create a record / document for each actor
+							// Add all the actors to the Workshop document (nodes)
+							// Create a link where necessary
+							// Create an Actor stub
+							actor['project_id'] = req.body.project_id;
+							actor['workshop_name'] = req.body.name;
+							actor['user_id'] = req.user._id;
+					
+							actorscollection.insert(actor, {w: 1}, function(err, doc){
+								actor._id = doc._id;
+							});
+							console.log(JSON.stringify(actor));
+							console.log('++++++++++++++++++++++++++++++++++++++++');
+							workshopJSON.nodes.push(actor);
+							//console.dir(workshopJSON, {depth: null, colors: true});
+						};
+						
+					
 					// Create a link where necessary
 					if(actor.Connection != ''){
 						// Need to create a link 'record'

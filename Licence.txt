@@ -1,0 +1,41 @@
+This document details the licence under which this code is released:
+
+Licence and legal links for code used in application
+
+Libraries/Code used:
+
+Core:
+node.js (https://nodejs.org/en/) - https://raw.githubusercontent.com/nodejs/node/master/LICENSE
+mongoDB (https://www.mongodb.com/) - https://www.mongodb.com/legal/legal-notices
+d3.js (https://d3js.org/) - https://opensource.org/licenses/BSD-3-Clause 
+docker (https://www.docker.com/) - https://www.docker.com/legal
+
+Libraries:
+    body-parser
+    bootstrap
+    chai
+    cookie-parser
+    csvtojson
+    debug
+    ejs
+    express
+    express-session
+    image-size
+    imagemagick
+    mocha
+    mongodb
+    mongoose
+	mongoskin
+    monk
+    morgan
+    multer
+    passport
+    passport-local
+    passport-local-mongoose
+    serve-favicon
+    should
+    string.prototype.startswith
+	react 
+	react-dom
+	babelify
+	babel-preset-react

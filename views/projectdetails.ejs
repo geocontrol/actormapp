@@ -17,8 +17,9 @@
 			<div class="jumbotron">
 			<h1><%= project.name %></h1>
 			
-			<p>Problem definition</p>
-
+			<% if(project.definition) {%>
+			<p><%= project.definition %></p>
+			<% } %>
 
 		 <h3>List of Workshops</h3>
 

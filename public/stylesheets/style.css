@@ -6,3 +6,25 @@ body {
 a {
   color: #00B7FF;
 }
+
+.trespass_red {
+	color: #ff2800;
+}
+.trespass_grey {
+	color: #ededeb;
+}
+.trespass_black {
+	color: #11110e;
+}
+.trespass_grey_light {
+	color: #b6b6b3;
+}
+.trespass_grey_medium {
+	color: #7f7f7c;
+}
+.trespass_grey_dark {
+	color: #484845;
+}
+.trespass_grey_darker {
+	color: #32322f;
+}

@@ -6,4 +6,6 @@ RUN npm install -g bower
 RUN npm install --global browserify
 ADD . .
 
+RUN echo '{ "allow_root": true }' > /root/.bowerrc
+
 CMD ["npm","start"]
