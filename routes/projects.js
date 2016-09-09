@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var ObjectId = require('mongodb').ObjectID;
+var ObjectId = require('node_modules/mongodb').ObjectID;
 var database = require('../database');
 // custom library
 //var config = require('../support/config');
