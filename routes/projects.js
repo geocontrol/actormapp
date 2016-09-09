@@ -40,7 +40,7 @@ router.post('/add', function(req, res, next) {
 	    var db = req.db;
 
 	    // Take the parameters into a JSON object
-		var Project = {'name' : req.body.name, 'user_id' : req.user._id, 'definition' : req.body.definition };
+		var Project = {'name' : req.body.name, 'user_id' : req.user._id };
 
 		console.log('JSON - Project : ' + JSON.stringify(Project));
 
