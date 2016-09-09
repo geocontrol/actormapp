@@ -33,12 +33,14 @@
            <% if(typeof(errorMessage) !== 'undefined') {%>
               <span><%= errorMessage %></span>
            <% } %>
-			<ul>		 
-           <% docs.forEach(function(project) { %>
+			<ul>	
+		<% if(projects) {%>	 
+           <% projects.forEach(function(project) { %>
 
 			 <li><a href="/projects/<%= project._id %>"><%= project.name %></a></li>
 
 		<% }); %>
+		<% } %>
 			</ul>
 		<hr>
 		<h2>Add New Project</h2>
