@@ -51,6 +51,7 @@ router.post('/add', function(req, res, next) {
 	    collection.insert(Project, function (err, doc) {
 	        if (err) {
 	            // If it failed, return error
+				console.log(err);
 	            res.send("There was a problem adding the information to the database.");
 	        }
 	        else {
