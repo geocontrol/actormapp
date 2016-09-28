@@ -1,0 +1,42 @@
+{
+  "name": "basicMongo",
+  "version": "0.0.5",
+  "private": true,
+  "scripts": {
+    "start": "node ./bin/www",
+	"test" : "make test",
+	"build": "browserify -t [ babelify ] main.js -o ./public/bundle.js"
+  },
+  "dependencies": {
+    "body-parser": "~1.13.2",
+    "bootstrap": "^3.3.6",
+    "chai": "^3.5.0",
+    "cookie-parser": "~1.3.5",
+    "csvtojson": "^1.0.0",
+    "debug": "~2.2.0",
+    "ejs": "^2.4.1",
+    "express": "~4.13.1",
+    "express-session": "^1.14.0",
+    "image-size": "^0.5.0",
+    "imagemagick": "^0.1.3",
+    "mocha": "^2.5.3",
+    "mongodb": "1.4.x",
+    "mongoose": "^4.5.4",
+	"mongoskin": "1.3.20",
+    "monk": "^1.0.1",
+    "morgan": "~1.6.1",
+    "multer": "^1.1.0",
+    "passport": "^0.3.2",
+    "passport-local": "^1.0.0",
+    "passport-local-mongoose": "^4.0.0",
+    "serve-favicon": "~2.3.0",
+    "should": "^9.0.2",
+    "string.prototype.startswith": "^0.2.0", 
+	"browserify": "*",
+	"react": "*",
+	"react-dom": "*",
+	"react-bootstrap-table": "*",
+	 "babelify": "*",
+	 "babel-preset-react": "*"
+  }
+}

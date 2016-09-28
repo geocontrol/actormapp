@@ -96,6 +96,38 @@ router.post('/add', function(req, res, next) {
 	}
 });
 
+
+/* GET /workshops/actors/id */
+router.get('/actors/:id', function(req, res, next) {
+	if(req.user) {
+		
+	    // Set our internal DB variable
+	    var db = req.db;
+	    // Set our collections
+	    var workshopcollection = db.get('workshops');
+		
+		var actorJSON = {'actors' : []};
+		
+		// Get the workshop details
+		workshopcollection.findOne(req.params.id, function (err, workshop) {
+			if (err) return next(err);
+		 	console.log('Workshop : ' + JSON.stringify(workshop));
+			// Now if there are actors in the workshop get the details for each actor and add to a JSON object
+			workshop.nodes.forEach(function(node) {
+				console.log('Actor : ' + JSON.stringify(node));
+				actorJSON.actors.push(node);
+			});
+			console.log('Full Actor JSON : ' + JSON.stringify(actorJSON));
+			res.render('actorsheet', {title: 'Workshop Actors', workshop_id: req.params.id, actors: workshop.nodes});
+		});	
+			
+		
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}
+});
+
 /* GET /workshops/id */
 router.get('/:id', function(req, res, next) {
 	if(req.user) {

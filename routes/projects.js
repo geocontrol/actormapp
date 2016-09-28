@@ -40,7 +40,7 @@ router.post('/add', function(req, res, next) {
 	    var db = req.db;
 
 	    // Take the parameters into a JSON object
-		var Project = {'name' : req.body.name, 'user_id' : req.user._id };
+		var Project = {'name' : req.body.name, 'user_id' : req.user._id, 'problemtext' : req.body.problemtext};
 
 		console.log('JSON - Project : ' + JSON.stringify(Project));
 
@@ -77,9 +77,9 @@ router.get('/:id', function(req, res, next) {
 	    // Set our collection
 	    var collection = db.get('projects');
 
-		collection.findById(req.params.id, function (err, post) {
+		collection.findOne(req.params.id, function (err, post) {
 			if (err) return next(err);
-		 	console.log('Project : ' + post);
+		 	console.log('Project : ' + JSON.stringify(post));
 			res.render('projectdetails', {title: 'Actor Mapping - Projects', project: post, user: req.user});
 		});
 	} else {
@@ -87,6 +87,33 @@ router.get('/:id', function(req, res, next) {
 		res.redirect('/login');
 	}
     
+});
+
+/* GET /projects/delete/id */
+router.get('/delete/:id', function(req, res, next) {
+	if(req.user) {
+		console.log('Delete the Project : ' + req.params.id);
+
+		var id = req.params.id;
+		console.log('ID: ' + id);
+		// Set our internal DB variable
+	    var db = req.db;
+	    // Set our collection
+	    var collection = db.get('projects');
+
+	    console.log(collection);
+
+	    collection.remove({ "_id": req.params.id }, function (err, result){
+	    	if(err){
+	    		console.log(err);
+	    	} else {
+	    		 res.redirect('/projects');
+	    	}
+		});
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}
 });
 
 

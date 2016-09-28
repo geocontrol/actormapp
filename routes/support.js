@@ -165,7 +165,7 @@ router.post('/testdata2', function(req, res, next) {
 						link = actor.Connection.split(",");
 						console.log('SOURCE: ' + link[0]);
 						console.log('TARGET: ' + link[1]);
-						JSONrel = {'source': Number(link[0]), 'target': Number(link[1]), 'value': actor.Scale, 'label': 'connection'};
+						JSONrel = {'source': Number(link[0]), 'target': Number(link[1]), 'value': actor.Posneg, 'label': 'connection'};
 						workshopJSON.links.push(JSONrel);
 					}
 				};

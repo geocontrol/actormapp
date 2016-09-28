@@ -6,10 +6,5 @@ myapp:
    - db
   ports:
    - "3000:3000"
-bower:
-    build: .
-    volumes:
-      - ~/Projects/RHUL/SocialPatternMapper/actormapp:/usr/src/app
-    working_dir: /usr/src/app
-    entrypoint: ['bower', '--allow-root']
+
 

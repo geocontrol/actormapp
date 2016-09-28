@@ -1,11 +1,10 @@
 FROM nodesource/node:4.0
-
-ADD package.json package.json
-RUN npm install
-RUN npm install -g bower
-RUN npm install --global browserify
+ENV NODE_ENV=development
+WORKDIR /usr/local/src
+COPY package.json /usr/local/src/package.json
 ADD . .
+RUN npm install
+RUN npm run build 
 
-RUN echo '{ "allow_root": true }' > /root/.bowerrc
 
 CMD ["npm","start"]
