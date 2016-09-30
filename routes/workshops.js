@@ -49,6 +49,7 @@ router.get('/add', function(req, res, next) {
 /* POST /workshops/add */
 router.post('/add', function(req, res, next) {
 	if(req.user) {
+		if(req.body.name) {
 		console.log('Add a Workshop:');
 		console.log(req.body);
 
@@ -90,6 +91,10 @@ router.post('/add', function(req, res, next) {
 				});
 	        }
 	    });
+	} else {
+		// No name for the project details so dont do anything
+		res.redirect("/projects/" + req.body.project_id);
+	};
 	} else {
 		// No user details rediect to login
 		res.redirect('/login');

@@ -38,7 +38,7 @@
 			</ul>
 		<hr>
 		<h3>Add New Workshop</h3>
-		<form method="post" action="/workshops/add" role="form" data-toggle="validator" class="form-horizontal">
+		<form method="post" action="/workshops/add" role="form" class="form-horizontal" id="blankworkshop">
 	 
            <% if(typeof(errorMessage) !== 'undefined') {%>
               <span><%= errorMessage %></span>
@@ -63,7 +63,7 @@
 			<p>There are two sets of Demo Data available.</p>
 			
 			<h5>Large Lego Data Set</h5>
-			<form method="post" action="/support/testdata" role="form" data-toggle="validator" class="form-horizontal">
+			<form method="post" action="/support/testdata" role="form" class="form-horizontal" id="prepoplego1">
             <div class="form-group">
  		 		<label for="name" class="col-sm-2 control-label">Name</label>
 				<div class="col-sm-10">
@@ -78,7 +78,7 @@
 			</div>
 			</form>
 			<h5>Short Lego Data Set</h5>
-			<form method="post" action="/support/testdata2" role="form" data-toggle="validator" class="form-horizontal">
+			<form method="post" action="/support/testdata2" role="form" class="form-horizontal" id="prepoplego2">
             <div class="form-group">
  		 		<label for="name" class="col-sm-2 control-label">Name</label>
 				<div class="col-sm-10">

@@ -19,6 +19,7 @@ var Converter = require("csvtojson").Converter;
 /* GET */
 router.post('/testdata', function(req, res, next) {
 	if(req.user) {
+		if(req.body.name) {
 	    // Set our internal DB variable
 	    var db = req.db;
 	
@@ -97,6 +98,10 @@ router.post('/testdata', function(req, res, next) {
 			}
 		});	
 	} else {
+		// No name for the project details so dont do anything
+		res.redirect("/projects/" + req.body.project_id);
+	};
+	} else {
 		// No user details rediect to login
 		res.redirect('/login');
 	}
@@ -105,6 +110,8 @@ router.post('/testdata', function(req, res, next) {
 /* GET */
 router.post('/testdata2', function(req, res, next) {
 	if(req.user) {
+		
+		if(req.body.name) {
 	    // Set our internal DB variable
 	    var db = req.db;
 	
@@ -203,6 +210,10 @@ router.post('/testdata2', function(req, res, next) {
 			    });
 			}
 		});	
+	} else {
+		// No name for the project details so dont do anything
+		res.redirect("/projects/" + req.body.project_id);
+	};
 	} else {
 		// No user details rediect to login
 		res.redirect('/login');
