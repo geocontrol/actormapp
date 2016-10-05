@@ -96,8 +96,8 @@
 		<form method="post" action="/actors/<%= actor._id %>" class="form-horizontal">
           
 		 	<% for (var key in actor) { %>
-		 		<% if(key != '_id' && key != '') { %>
-		 			<% if(key != 'actorTarget' && key != 'relTarget' && key != 'imagepath') { %>
+		 		<% if(key != '_id' && key != '' && key != 'ID') { %>
+		 			<% if(key != 'actorTarget' && key != 'relTarget' && key != 'images') { %>
 						<div class="form-group">	
 		 				<label for="<%= key %>" class="col-sm-2 control-label"><%= key %></label>
 						<div class="col-sm-10">
@@ -107,10 +107,11 @@
 							</div>
 						</div>
 						</div>
-		 			<% } %>
+		 			<% }  else { %>
+
 		 		<% } %>
 			<% } %>
-
+		<% } %>
 			<div class="form-group">
 				<div class="col-sm-10">
 					<h3>Add new parameters</h3>
@@ -131,6 +132,12 @@
 			<div class="form-group">
 				<div class="col-sm-10">
 					<h3>Images</h3>
+					<% if(actor.images) { %>
+						<% actor.images.forEach(function(image) {  %>
+							<img src='/<%= image.path %>' height='150' width='150'>
+						<% }); %>
+					<% } %>
+					
 						<% if(actor.imagepath) { %>
 							<%	if (Array.isArray(actor.imagepath)) {%>
 								<% 		actor.imagepath.forEach(function(el, index) { %>

@@ -32,7 +32,6 @@
 	
 	<body class="container">
 <main>
-	        <h1>Actor network map</h1>
 	        <h2>Click to view their profile</h2>
 
 <div>
@@ -121,7 +120,6 @@ d3.json("/actors/map/mapdata5/<%= workshop_id %>", function(error, graph) {
 var setEvents = node
         // Append hero text
         .on( 'click', function (d) {
-            d3.select("h1").html(d.Name); 
             d3.select("h2").html ("Take me to " + "<a href='/actors/" + d._id + "' >"  + d.Name + " web page ⇢"+ "</a>" ); 
          })
 

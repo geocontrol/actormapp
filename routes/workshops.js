@@ -199,7 +199,7 @@ router.get('/delete/:id', function(req, res, next) {
 	    console.log(collection);
 		
 		// Get the workshop record
-		collection.findById(req.params.id, function (err, post) {
+		collection.findOne(req.params.id, function (err, post) {
 			if (err) return next(err);
 		 	console.log('Workshop : ' + post);
 			
@@ -216,9 +216,9 @@ router.get('/delete/:id', function(req, res, next) {
 					
 				
 					// Update the project record
-					projectcollection.findById(project_id, function (err, post) {
+					projectcollection.findOne(project_id, function (err, post) {
 						if (err) return next(err);
-					 	console.log('Project : ' + post);
+					 	console.log('Project : ' + JSON.stringify(post));
 					
 						var index = null;
 						for (var i =0; i < post.workshops.length; i++) {

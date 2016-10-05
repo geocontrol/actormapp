@@ -100,7 +100,7 @@ router.post('/add2', function(req, res, next) {
 	    var collection = db.get('workshops');
 		var actorscollection = db.get('actors');
 
-		collection.findById(req.body._id, function (err, post) {
+		collection.findOne(req.body._id, function (err, post) {
 			if (err) return next(err);
 		 	console.log('Workshop : ' + post);
 			if (post.nodes) {
@@ -166,7 +166,7 @@ router.post('/addrel2', function(req, res, next) {
 	    // Set our collection
 	    var collection = db.get('workshops');
 	
-		collection.findById(req.body._id, function (err, post) {
+		collection.findOne(req.body._id, function (err, post) {
 			if (err) return next(err);
 		 	console.log('Workshop : ' + post);
 			if (post.links) {
@@ -214,7 +214,7 @@ router.get('/map/mapdata/:id', function(req, res, next){
 	    // Set our collection
 	    var collection = db.get('workshops');
 	
-		collection.findById(req.params.id, function (err, post) {
+		collection.findOne(req.params.id, function (err, post) {
 			console.log(JSON.stringify(post));
 			res.send(JSON.stringify(post));
 		});
@@ -389,7 +389,7 @@ router.get('/map/mapdata5/:id', function(req, res, next){
 	    // Set our collection
 	    var collection = db.get('workshops');
 	
-		collection.findById(req.params.id, function (err, post) {
+		collection.findOne(req.params.id, function (err, post) {
 			console.log(JSON.stringify(post));
 			res.send(JSON.stringify(post));
 		});
@@ -465,7 +465,7 @@ router.get('/:id', function(req, res, next) {
 	    // Set our collection
 	    var collection = db.get('actors');
 
-		collection.findById(req.params.id, function (err, post) {
+		collection.findOne(req.params.id, function (err, post) {
 			if (err) return next(err);
 			collection.find({}, function (err, actors){
 				if (err) return next(err);
@@ -474,7 +474,7 @@ router.get('/:id', function(req, res, next) {
 			 		actorDropDown = actorDropDown + "<option value='" + actordetail._id + "'>" + actordetail.name + "</option>"  
 			 	});
 			 	actorDropDown = actorDropDown + "</select>";
-			 	console.log('THE Actor : ' + post);
+			 	console.log('THE Actor : ' + JSON.stringify(post));
 				res.render('actordetails', {title: 'Actor Mapping - Actors', actor: post, actordropdown: actorDropDown, user: req.user});
 			});
 		});
@@ -502,6 +502,22 @@ router.post('/upload', upload.single( 'file' ), function(req, res, next) {
 		      error : 'The image must be at least 640 x 480px'
 		    } );
 		}
+		
+		var JSONimages = {'images':[]};
+		JSONimages.images.push(req.file);
+		
+		console.log(JSON.stringify(JSONimages));
+		
+		// Add details to the actor record
+	    // Set our internal DB variable
+	    var db = req.db;
+	
+	    // Set our collection
+		var actorscollection = db.get('actors');
+		
+		actorscollection.update({_id: req.body.actor_id},{$set: JSONimages}, {w: 1}, function(err, count, status){
+			console.log(status);
+		});
 
 		console.log('Image Details: ' + JSON.stringify(req.file) );
 		return res.status( 200 ).send( req.file );
@@ -551,7 +567,7 @@ router.post('/:id', function(req, res, next) {
 
 		};
 
-		console.log(Actor);
+		console.log(JSON.stringify(Actor));
 	    // Set our internal DB variable
 	    var db = req.db;
 

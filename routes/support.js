@@ -220,4 +220,25 @@ router.post('/testdata2', function(req, res, next) {
 	}
 });
 
+router.post('/exportXML', function(req, res, next) {
+	if(req.user) {
+		// Get the Workshop data and then re-jig into XML format for ANM
+	    // Set our internal DB variable
+	    var db = req.db;
+
+	    // Set our collection
+	    var collection = db.get('workshops');
+
+		collection.findById(req.body.id, function (err, post) {
+			if (err) return next(err);
+		 	console.log('Workshop : ' + post);
+			//res.render('workshopdetails', {title: 'Actor Mapping - Workshops', workshop: post, user: req.user });
+		});	
+
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}
+});
+
 module.exports = router;
