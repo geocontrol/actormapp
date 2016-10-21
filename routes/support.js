@@ -409,6 +409,8 @@ router.get('/prepoplinks/:id', function(req, res, next) {
 
 router.post('/exportXML', function(req, res, next) {
 	if(req.user) {
+
+		var XMLOutput = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><system   xmlns="https://www.trespass-project.eu/schemas/TREsPASS_model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.trespass-project.eu/schemas/TREsPASS_model https://www.trespass-project.eu/schemas/TREsPASS_model.xsd" author="INTERActor" version="0.0.0" date="2016-06-14 10:17:42" id="id-BkZ-hlL8Gx-model">';
 		// Get the Workshop data and then re-jig into XML format for ANM
 	    // Set our internal DB variable
 	    var db = req.db;
@@ -416,9 +418,19 @@ router.post('/exportXML', function(req, res, next) {
 	    // Set our collection
 	    var collection = db.get('workshops');
 
-		collection.findOne(req.body.id, function (err, post) {
+		collection.findOne(req.body._id, function (err, post) {
 			if (err) return next(err);
 		 	console.log('Workshop : ' + post);
+			// Set the title
+			XMLOutput = XMLOutput + "<title>" + post.name + "</title><actors>";
+			// Need to loop though the actors and add them
+			post.nodes.forEach(function(node){
+				XMLOutput = XMLOutput + '<actor id="actor__' + node.Name + '" type="tkb:actor" name="' + node.Name + '" interactor_id="' + node._id + '"><atLocations></atLocations></actor>';
+				
+			});
+			XMLOutput = XMLOutput + '</actors><edges></edges><locations></locations><assets></assets></system>';
+			res.set('Content-Type', 'text/xml');
+			res.send(XMLOutput);
 			//res.render('workshopdetails', {title: 'Actor Mapping - Workshops', workshop: post, user: req.user });
 		});	
 
