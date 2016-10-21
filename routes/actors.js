@@ -14,10 +14,14 @@ var Account = require('../models/account');
 Array.prototype.contains = function(obj) {
     var i = this.length;
     while (i--) {
-        if (this[i] === obj) {
+		console.log(this);
+		console.log(obj);
+        if (this[i] === String(obj)) {
+			console.log('match');
             return true;
         }
     }
+	console.log('no match');
     return false;
 }
 
@@ -66,7 +70,8 @@ router.post('/deleteActors', function(req, res, next) {
 		});
 	});
 	
-	newNodes={'nodes':[]};		
+	newNodes={'nodes':[]};	
+	newLinks={'links':[]};	
 	workshopcollection.findOne(workshop_id, function (err, workshop) {
 		if (err) return next(err);
 	 	console.log('Workshop : ' + JSON.stringify(workshop));
@@ -81,12 +86,30 @@ router.post('/deleteActors', function(req, res, next) {
 			};
 		});
 		
+		// Removed the nodes
 		console.log('New Nodes: ' + JSON.stringify(newNodes));
+		
+		// Now need to edit the links
+		workshop.links.forEach(function(link){
+			console.log("Check Node ID in links record : " + link.source + " & " + link.target);
+			if(actors.contains(link.source) || actors.contains(link.target)){
+				console.log('A Match so dont re-add');
+			} else {
+				newLinks.links.push(link);
+				console.log('Current State of newLinks : ' + JSON.stringify(newLinks));
+			};	
+		});
+		
+		// Removed the links
+		console.log('New Links: ' + JSON.stringify(newLinks));
 		
 		workshopcollection.update({'_id': workshop_id},{$set: newNodes}, {w: 1}, function(err, result){
 			if(err) console.log('Database error : ' + err);
-			console.log('Update Workshop record: ' + JSON.stringify(result));
-			res.status(200);
+			workshopcollection.update({'_id': workshop_id},{$set: newLinks}, {w: 1}, function(err, result){
+				if(err) console.log('Database error : ' + err);
+					console.log('Update Workshop record: ' + JSON.stringify(result));
+					res.status(200);
+				});
 		});
 	});
 } else {
