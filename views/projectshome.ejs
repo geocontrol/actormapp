@@ -33,15 +33,18 @@
            <% if(typeof(errorMessage) !== 'undefined') {%>
               <span><%= errorMessage %></span>
            <% } %>
-			<ul>	
+			<table class="table table-striped">		
 			<% if(projects) {%>
            <% projects.forEach(function(project) { %>
 
-			 <li><a href="/projects/<%= project._id %>"><%= project.name %></a> <a href="/projects/delete/<%= project._id %>">X</a></li>
+			 <tr>
+				 <td><a href="/projects/<%= project._id %>"><%= project.name %></a></td> 
+				 <td><a href="/projects/delete/<%= project._id %>" type="delete" class="btn btn-default" role="button">delete</a></td>
+			 </tr>
 
 		<% }); %>
 			<% } %>
-			</ul>
+			</table>
 		<hr>
 		<h2>Add New Project</h2>
 		<form method="post" action="/projects/add" role="form" data-toggle="validator" class="form-horizontal">

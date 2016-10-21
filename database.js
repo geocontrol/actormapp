@@ -69,9 +69,28 @@ var findDocuments = function(db, callback) {
   });
 }
 
+var getActors = function(db, nodes, callback) {
+    
+    var actorcollection = db.get('actors');
+	
+	var actorJSON = {'actors' : []};
+	
+	nodes.forEach(function(node) {
+		//actorJSON.actors.push(node);
+		// We now get the full actor details from the actor record page
+		actorcollection.findOne(node._id, function (err, actor) {
+			if (err) return next(err);
+			actorJSON.actors.push(actor);
+		});
+	});
+	console.log('FULL ACTOR JSON: ' + JSON.stringify(actorJSON));
+	callback(actorJSON);
+}
+
 
 module.exports.insertDocuments = insertDocuments;
 module.exports.updateDocument = updateDocument;
 module.exports.deleteDocument = deleteDocument;
 module.exports.findDocuments = findDocuments;
 module.exports.insertActor = insertActor;
+module.exports.getActors = getActors;

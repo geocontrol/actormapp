@@ -11,6 +11,16 @@ require('string.prototype.startswith');
 var passport = require('passport');
 var Account = require('../models/account');
 
+Array.prototype.contains = function(obj) {
+    var i = this.length;
+    while (i--) {
+        if (this[i] === obj) {
+            return true;
+        }
+    }
+    return false;
+}
+
 /* GET /actors listing */
 router.get('/', function(req, res, next) {
 	if(req.user) {
@@ -28,6 +38,129 @@ router.get('/', function(req, res, next) {
 	}
 	
 });
+
+router.post('/deleteActors', function(req, res, next) {
+	if(req.user) {
+		console.log('Delete Actors:');
+		console.log(req.body);
+	actors = req.body.row;
+	workshop_id = req.body.workshop_id;
+	
+	console.log("Actors : " + actors);
+	console.log("Workshop ID : " + workshop_id);
+	
+	// Set our internal DB variable
+    var db = req.db;
+    // Set our collection
+    var actorcollection = db.get('actors');
+	var workshopcollection = db.get('workshops');
+	actors.forEach(function(actor){
+		// Remove the actor from the workshop list
+		console.log("Actor to delete : " + JSON.stringify(actor));
+	    actorcollection.remove({ "_id": actor }, function (err, result){
+	    	if(err){
+	    		console.log(err);
+	    	} else {
+				console.log('Deleted Actor : ' + actor._id + ' Record');
+	    	};
+		});
+	});
+	
+	newNodes={'nodes':[]};		
+	workshopcollection.findOne(workshop_id, function (err, workshop) {
+		if (err) return next(err);
+	 	console.log('Workshop : ' + JSON.stringify(workshop));
+			
+		workshop.nodes.forEach(function(node){
+			console.log("Check Node ID in workshop record : " + node._id);
+			if(actors.contains(node._id)){
+				console.log('A Match so dont re-add');
+			} else {
+				newNodes.nodes.push(node);
+				console.log('Current State of newNodes : ' + JSON.stringify(newNodes));
+			};
+		});
+		
+		console.log('New Nodes: ' + JSON.stringify(newNodes));
+		
+		workshopcollection.update({'_id': workshop_id},{$set: newNodes}, {w: 1}, function(err, result){
+			if(err) console.log('Database error : ' + err);
+			console.log('Update Workshop record: ' + JSON.stringify(result));
+			res.status(200);
+		});
+	});
+} else {
+	// No user details rediect to login
+	res.redirect('/login');
+}
+});
+
+/* POST /actors/sheetupdate - Update an actor record from the Spreadsheet view */
+router.post('/sheetupdate', function(req, res, next) {
+	if(req.user) {
+	console.log('Update the Actor : ' + req.body._id);
+	console.log('Set Name: ' + req.body.name + ' to Value: ' + req.body.value + ' for Workshop ID: ' + req.body.workshop_id);
+	var workshop_id = req.body.workshop_id;
+	var actor_id = req.body._id;
+	var editName = req.body.name;
+	var editValue = req.body.value;
+	var newSet = {};
+	newSet[editName] = editValue;
+	console.log(JSON.stringify(newSet));
+	
+    // Set our internal DB variable
+    var db = req.db;
+
+    // Set our collection
+    var actorscollection = db.get('actors');
+	var workshopcollection = db.get('workshops');
+
+
+	actorscollection.findOne(actor_id, function (err, post) {
+		if (err) return next(err);
+		console.log('Returned Actor Details for ID: ' + actor_id + "/NActor: " + JSON.stringify(post));
+		// Workshop ID
+		var workshop_id = post.workshop_id;
+		
+		actorscollection.update({_id: actor_id},{$set: newSet}, {w: 1}, function(err, status){
+			console.log('DOne the database connection for the update' + JSON.stringify(status) );
+			if(err){
+				console.log('Error: ' + JSON.Stringify(err));
+			} else {
+				// Update the entry in the workshop record
+				workshopcollection.findOne(req.body.workshop_id, function (err, post) {
+					if (err) console.log(JSON.stringify('Cant find workshop record: ' + err + ' : The Workshop ID is: ' + req.body.workshop_id));
+					workshopcollection.update({_id: req.body.workshop_id, 'nodes._id': req.body._id}, {$set:{'nodes.$.[editName]': editValue}}, {w: 1}, function(err, status){
+						if (err) console.log(JSON.stringify('Error updating workshop record: ' + JSON.Stringify(err)));
+						console.log('DOne the database update to the workshop record ' + JSON.stringify(status) );
+						console.log('Status ' + JSON.stringify(status));
+						return res.status( 200 );
+						//res.redirect('/workshops/' + req.body.actor_id);
+					});
+					
+				});
+			};
+		});
+	});
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}
+});
+
+/* POST /actors/sheetupdate - Update an actor record from the Spreadsheet view */
+router.post('/sheetadd', function(req, res, next) {
+	if(req.user) {
+		// Show what has been sent
+		console.log('Add a row to the spreadsheet');
+		console.log('Sent Row Data: ' + JSON.stringify(req.body));
+		return res.status( 200 );
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}
+});
+
 
 /* GET /actors/add */
 router.get('/add', function(req, res, next) {
@@ -93,6 +226,8 @@ router.post('/add2', function(req, res, next) {
 		console.log('Add Actors:');
 		console.log(req.body);
 
+		// If the name is blank then ignore it
+		if(req.body.name != "") {
 	    // Set our internal DB variable
 	    var db = req.db;
 	
@@ -114,43 +249,47 @@ router.post('/add2', function(req, res, next) {
 			if (Array.isArray(req.body.name)) {
 				//
 				req.body.name.forEach(function(name) {
-					console.log(name);
-					var JSONname = {'name': name};
-					console.log(JSON.stringify(JSONname));
+					// Double check it isnt a blank name
+					if(name != "") {
+						console.log(name);
+						var JSONname = {'Name': name, 'Scale': 1, 'Posneg': 1};
+						console.log(JSON.stringify(JSONname));
 				
-					actorscollection.insert(JSONname, {w: 1}, function(err, doc){
-						JSONname = {'name': name, 'id': doc._id, '_id': doc._id};
-					});
-					JSONnodes.nodes.push(JSONname);
-					console.log(JSON.stringify(JSONnodes));
+						actorscollection.insert(JSONname, {w: 1}, function(err, doc){
+							JSONname = {'Name': name, '_id': doc._id, 'Scale': 1, 'Posneg': 1};
+						});
+						JSONnodes.nodes.push(JSONname);
+						console.log(JSON.stringify(JSONnodes));
+					};
 				});
 			} else {
-				var JSONname = {'name': req.body.name};
+				var JSONname = {'Name': req.body.name, 'Scale': 1, 'Posneg': 1};
 			
 				actorscollection.insert(JSONname, {w: 1}, function(err, doc){
 					if(err){
 						console.log(err);
 					} else {
-					JSONname = {'name': req.body.name, 'id': doc._id, '_id': doc._id};
+						
+					JSONname = {'Name': req.body.name, '_id': doc._id, 'Scale': 1, 'Posneg': 1};
 				}
 				});
 				JSONnodes.nodes.push(JSONname);
 				console.log(JSON.stringify(JSONnodes));
 			};
 		
-			console.log(JSON.stringify(JSONnodes));
+			console.log('Adding An Actor: ' + JSON.stringify(JSONnodes));
 			collection.update({_id: req.body._id},{$set: JSONnodes}, {w: 1}, function(err, count, status){
 				console.log(status);
 			});
 		});
-	
+		
+		// All the above if name isnt blank on the form
+		};
 		res.redirect('/workshops/' + req.body._id);
 	} else {
 		// No user details rediect to login
 		res.redirect('/login');
 	}
-
-	
 });
 
 
@@ -179,14 +318,14 @@ router.post('/addrel2', function(req, res, next) {
 
 			if (Array.isArray(req.body.source)) {
 				for(var index in req.body.source) {
-					JSONrel = {'source': Number(req.body.source[index]), 'target': Number(req.body.target[index]), 'value': Number(req.body.value[index]), 'label': req.body.label[index]};
+					JSONrel = {'source': req.body.source[index], 'target': req.body.target[index], 'value': Number(req.body.value[index]), 'label': req.body.label[index]};
 					console.log('Relationship: ' + JSON.stringify(JSONrel));
 				
 					JSONlinks.links.push(JSONrel);
 					console.log('All Links: ' + JSON.stringify(JSONlinks));
 				};
 			} else {
-				JSONrel = {'source': Number(req.body.source), 'target': Number(req.body.target), 'value': Number(req.body.value), 'label': req.body.label};
+				JSONrel = {'source': req.body.source, 'target': req.body.target, 'value': Number(req.body.value), 'label': req.body.label};
 				JSONlinks.links.push(JSONrel);
 				console.log('All Links: ' + JSON.stringify(JSONlinks));
 			};
@@ -302,7 +441,8 @@ router.get('/map/map4/:id', function(req, res, next) {
 router.get('/map/map5/:id', function(req, res, next) {
 	if(req.user) {
 		console.log('Get the details of Workshop ID:' + req.params.id);
-		res.render('actormap5', {workshop_id: req.params.id});
+		
+		res.render('actormap5', {workshop_id: req.params.id, title: 'Actor Network Map', user: req.user});
 	} else {
 		// No user details rediect to login
 		res.redirect('/login');
@@ -390,6 +530,16 @@ router.get('/map/mapdata5/:id', function(req, res, next){
 	    var collection = db.get('workshops');
 	
 		collection.findOne(req.params.id, function (err, post) {
+			if(post.nodes){
+				
+			} else {
+				post['nodes']=[];
+			};
+			if(post.links){
+				
+			} else {
+				post['links']=[];
+			};
 			console.log(JSON.stringify(post));
 			res.send(JSON.stringify(post));
 		});
@@ -487,6 +637,7 @@ router.get('/:id', function(req, res, next) {
 /* POST /upload Handle uploading images for an actor */
 router.post('/upload', upload.single( 'file' ), function(req, res, next) {
 	if(req.user) {
+		if(req.file) {
 		console.log('Upload an image');
 		console.log('Actor ID: ' + req.body.actor_id);
 		if ( !req.file.mimetype.startsWith( 'image/' ) ) {
@@ -502,12 +653,6 @@ router.post('/upload', upload.single( 'file' ), function(req, res, next) {
 		      error : 'The image must be at least 640 x 480px'
 		    } );
 		}
-		
-		var JSONimages = {'images':[]};
-		JSONimages.images.push(req.file);
-		
-		console.log(JSON.stringify(JSONimages));
-		
 		// Add details to the actor record
 	    // Set our internal DB variable
 	    var db = req.db;
@@ -515,12 +660,31 @@ router.post('/upload', upload.single( 'file' ), function(req, res, next) {
 	    // Set our collection
 		var actorscollection = db.get('actors');
 		
-		actorscollection.update({_id: req.body.actor_id},{$set: JSONimages}, {w: 1}, function(err, count, status){
-			console.log(status);
+		// Need to check if there are already images, so get the actor record
+		actorscollection.findOne(req.body.actor_id, function (err, actor) {
+			if (err) return next(err);
+			if (actor.images) {
+				actor.images.push(req.file);
+				console.log(JSON.stringify(actor.images));
+				actorscollection.update({_id: req.body.actor_id},{$set: {images: actor.images}}, {w: 1}, function(err, count, status){
+					console.log(status);
+					console.log('Image Details: ' + JSON.stringify(req.file) );
+					return res.status( 200 ).send( req.file );
+					//res.redirect('/workshops/' + req.body.actor_id);
+				});
+			} else {
+				var JSONimages = {'images':[]};
+				JSONimages.images.push(req.file);
+				console.log(JSON.stringify(JSONimages));
+				actorscollection.update({_id: req.body.actor_id},{$set: JSONimages}, {w: 1}, function(err, count, status){
+					console.log(status);
+					console.log('Image Details: ' + JSON.stringify(req.file) );
+					return res.status( 200 ).send( req.file );
+					//res.redirect('/workshops/' + req.body.actor_id);
+				});
+			}			
 		});
-
-		console.log('Image Details: ' + JSON.stringify(req.file) );
-		return res.status( 200 ).send( req.file );
+	};
 	} else {
 		// No user details rediect to login
 		res.redirect('/login');
@@ -584,31 +748,33 @@ router.post('/:id', function(req, res, next) {
 });
 
 /* GET /actors/delete/id */
-router.get('/delete/:id', function(req, res, next) {
-	if(req.user) {
-		console.log('Delete the Actor : ' + req.params.id);
+//router.get('/delete/:id', function(req, res, next) {
+//	if(req.user) {
+//		console.log('Delete the Actor : ' + req.params.id);
 
-		var id = req.params.id;
-		console.log('ID: ' + id);
+//		var id = req.params.id;
+//		console.log('ID: ' + id);
 		// Set our internal DB variable
-	    var db = req.db;
+//	    var db = req.db;
 	    // Set our collection
-	    var collection = db.get('actors');
+//	    var collection = db.get('actors');
+		//var workshopcollection = db.get('workshops');
 
-	    console.log(collection);
+	    //console.log(collection);
 
-	    collection.remove({ "_id": req.params.id }, function (err, result){
-	    	if(err){
-	    		console.log(err);
-	    	} else {
-	    		 res.redirect('/actors');
-	    	}
-		});
-	} else {
+		// Remove the actor from the workshop list
+//	    collection.remove({ "_id": req.params.id }, function (err, result){
+//	    	if(err){
+//	    		console.log(err);
+//	    	} else {
+//	    		 res.redirect('/actors');
+//	    	}
+//		});
+//	} else {
 		// No user details rediect to login
-		res.redirect('/login');
-	}
-});
+//		res.redirect('/login');
+//	}
+//});
 
 /* GET /actors/remove/id?key=value */
 router.get('/remove/:id/:key', function(req, res, next) {

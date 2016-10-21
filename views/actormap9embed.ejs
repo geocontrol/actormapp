@@ -37,7 +37,7 @@
 <div>
 <svg id="svg" width="1048" height="900"></svg>
 
-<script src="//d3js.org/d3.v4.min.js"></script>
+<script src="https://d3js.org/d3.v4.min.js"></script>
 <script>
 
 // some colour variables
@@ -56,7 +56,7 @@ var svg = d3.select("svg"),
 
 var simulation = d3.forceSimulation()
     .force("charge", d3.forceManyBody().strength(-500))
-    .force("link", d3.forceLink().id(function(d) { return d.ID; }).distance(40))
+    .force("link", d3.forceLink().id(function(d) { return d._id; }).distance(40))
     .force("x", d3.forceX(width / 2))
     .force("y", d3.forceY(height / 2))
     .on("tick", ticked);
@@ -120,7 +120,7 @@ d3.json("/actors/map/mapdata5/<%= workshop_id %>", function(error, graph) {
 var setEvents = node
         // Append hero text
         .on( 'click', function (d) {
-            d3.select("h2").html ("Take me to " + "<a href='/actors/" + d._id + "' >"  + d.Name + " web page ⇢"+ "</a>" ); 
+            d3.select("h2").html ("Take me to " + "<a href='/actors/" + d._id + "' target='_blank'>"  + d.Name + " web page ⇢"+ "</a>" ); 
          })
 
         .on( 'mouseenter', function() {

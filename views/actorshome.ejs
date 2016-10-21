@@ -36,7 +36,7 @@
 			<ul>		 
            <% actors.forEach(function(actor) { %>
 
-			 <li><a href="/actors/<%= actor._id %>"><%= actor.name %></a></li>
+			 <li><a href="/actors/<%= actor._id %>"><%= actor.name || actor.Name %></a></li>
 
 		<% }); %>
 			</ul>

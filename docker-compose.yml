@@ -6,5 +6,7 @@ myapp:
    - db
   ports:
    - "3000:3000"
+  volumes:
+   - ./uploads:/usr/local/src/public/uploads 
 
 

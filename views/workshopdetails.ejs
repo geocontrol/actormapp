@@ -3,6 +3,7 @@
 	<head>
 		<% include partials/head %>
 
+<link rel="stylesheet" href="/stylesheets/react-bootstrap-table.css">
 		<% 
 			if(workshop.nodes){
 			var actorDropdown = "";
@@ -10,9 +11,9 @@
 			if(workshop.nodes) { 
 				workshop.nodes.forEach(function(node) { 
 					if(node.Name) {
-						actorDropdown = actorDropdown + "<option value='" + node.ID + "'>" + node.Name + "</option>";
+						actorDropdown = actorDropdown + "<option value='" + node._id + "'>" + node.Name + "</option>";
 					} else {
-						actorDropdown = actorDropdown + "<option value='" + node.ID + "'>" + node.name + "</option>";
+						actorDropdown = actorDropdown + "<option value='" + node._id + "'>" + node.name + "</option>";
 					}
 					counter++;
 				});
@@ -21,6 +22,10 @@
 		%>
 		
 		<script>
+		var actors = <%- JSON.stringify(actors) %> ;
+		var workshop_id = '<%= workshop_id %>';
+		
+		
 		var counter = 1;
 		
 		var workshopJSON = <%- JSON.stringify(workshop) %>;
@@ -32,7 +37,21 @@
 			console.log(JSON.stringify(workshopJSON.links));
 			workshopJSON.links.forEach(function(link) {
 					console.log(JSON.stringify(link));
-			 		newinnerHTML = newinnerHTML + '<tr><td>' + link.source + '</td><td> > </td><td>' +  link.target + '</td><td>' + link.value + '</td><td> <button type="delete" name="deleteRel" id="deleteRel" class="btn btn-default" onClick="deleteRelationship(' + workshopJSON.links.indexOf(link) + ')">delete</button></td></tr>';
+					sourceName = '';
+					actors.forEach(function(actor){
+						if(actor._id == link.source){
+							sourceName = actor.Name || actor.name;
+						};
+					});
+					
+					targetName = '';
+					actors.forEach(function(actor){
+						if(actor._id == link.target){
+							targetName = actor.Name || actor.name;
+						};
+					});
+					
+			 		newinnerHTML = newinnerHTML + '<tr><td>' + sourceName + '</td><td> > </td><td>' +  targetName + '</td><td>' + link.value + '</td><td> <button type="delete" name="deleteRel" id="deleteRel" class="btn btn-default" onClick="deleteRelationship(' + workshopJSON.links.indexOf(link) + ')">delete</button></td></tr>';
 
 			});
 			newinnerHTML = newinnerHTML + '</table>';
@@ -87,7 +106,7 @@
 			
 			<ol class="breadcrumb">
 			  <li><a href="#">Projects</a></li>
-			  <li><a href="/projects/<%= workshop.project_id %>"><%= workshop.project_id %></a></li>
+			  <li><a href="/projects/<%= workshop.project_id %>"><%= JSON.stringify(projectname) %></a></li>
 			  <li class="active"><%= workshop.name %></li>
 			</ol>
 		</header>
@@ -95,19 +114,23 @@
 		<main>
 			<div class="col-md-12">
   		  <h3>Actor Network</h3>
-<% if(workshop.links){ %>
+
   		    <iframe sandbox="allow-popups allow-scripts allow-forms allow-same-origin allow-popups-to-escape-sandbox" src="/actors/map/map9embed/<%= workshop._id %>" marginwidth="0" marginheight="0" style="height:500px; width:95%" scrolling="yes" id="actord3map"></iframe>
 
   		  <div class="index-pop">
-  		    <a target="_blank" title="Open map a new window." href="/actors/map/map9/<%= workshop._id %>">Open<svg height="16" width="12"><path d="M11 10h1v3c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V3c0-0.55 0.45-1 1-1h3v1H1v10h10V10zM6 2l2.25 2.25-3.25 3.25 1.5 1.5 3.25-3.25 2.25 2.25V2H6z"></path></svg></a>
+  		    <a target="_blank" title="Open map a new window." href="/actors/map/map9/<%= workshop._id %>">Open map in new window<svg height="16" width="12"><path d="M11 10h1v3c0 0.55-0.45 1-1 1H1c-0.55 0-1-0.45-1-1V3c0-0.55 0.45-1 1-1h3v1H1v10h10V10zM6 2l2.25 2.25-3.25 3.25 1.5 1.5 3.25-3.25 2.25 2.25V2H6z"></path></svg></a>
   		  </div>
-<% } %>
+
 </div>
 
-				<div class="col-md-6">
-					<h1>Name: <%= workshop.name %></h1>
-					
-					<a href="/workshops/actors/<%= workshop._id %>">New Actor Sheet</a>
+	<div class="col-md-12">
+		<h1>Name: <%= workshop.name %></h1>
+		<h3>Actors</h3>
+		
+		<div id="actors"></div>
+	</div>
+<!--				<div class="col-md-6">
+
 					
 					<h3>Actors</h3>
 					<table class="table table-striped">	
@@ -127,7 +150,7 @@
 								<% } %>
 							<% }); %>
 						<% }; %>
-					</table>
+					</table>-->
 					<div class="well well-lg">
 						<h4>Add Actors</h4>
 						<form method="post" action="/actors/add2" class="form-horizontal">	
@@ -151,7 +174,7 @@
 					</div>
 				</div>
 		
-		<div class="col-md-6">
+		<div class="col-md-12">
 			<div>
 			<h3>Relationships</h3>
 		
@@ -184,19 +207,24 @@
 
 			 <div>
 	          <p>
-	             <button type="submit" name="exportXML" id="submit" class="btn btn-default">Export XML</button>
+	             <a href="#" name="exportXML" class="btn btn-default" role="button">Export XML</a>
 	          </p>
 			  
-  	          <p>
+  	    <!--      <p>
   	             <button type="submit" name="exportPDF" id="submit" class="btn btn-default">Export PDF</button>
-  	          </p>
+  	          </p> -->
 			 </div> 
 		</div>
+
+
 
 
 	</main>		
 	<footer>
 		<% include partials/footer %>
 	</footer>
+	
+	<script src="/bundle.js"></script>
+	
 	</body>
 </html>

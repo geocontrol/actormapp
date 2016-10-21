@@ -6,40 +6,22 @@ var BootstrapTable = ReactBsTable.BootstrapTable;
 var TableHeaderColumn = ReactBsTable.TableHeaderColumn;
 var TableDataSet = ReactBsTable.TableDataSet;
 
-var products = [
-{
-    id: 1,
-    name: "Product1",
-    price: 120
-},{
-    id: 2,
-    name: "Product2",
-    price: 80
-},{
-    id: 3,
-    name: "Product3",
-    price: 207
-},{
-    id: 4,
-    name: "Product4",
-    price: 100
-},{
-    id: 5,
-    name: "Product5",
-    price: 150
-},{
-    id: 6,
-    name: "Product6",
-    price: 160
-}
-];
-
 // ID,Connection,Narrative fragment,Name,Class,Groups,Scale,Posneg,Issue,Participant speech
 
 function onAfterSaveCell(row, cellName, cellValue){
   console.log("Save cell '"+cellName+"' with value '"+cellValue+"'");
   console.log("The whole row :");
   console.log(row);
+  $.post("/actors/sheetupdate",
+    {
+		workshop_id: workshop_id,
+        _id: row._id,
+        name: cellName,
+		value: cellValue
+    },
+    function(status){
+        console.log("\nStatus: " + status);
+    });
   // Here we handle updating the data.
   // Should update the local data and the remote data
   // Remote update should be AJAX style not require a reload of page 
@@ -68,10 +50,45 @@ var selectRowProp = {
   onSelectAll: onSelectAll
 };
 
+var OptionsSettings = {
+	afterInsertRow: addARow,
+	onDeleteRow: delRow	
+};
+
+function delRow(row){
+	console.log("Delete A Row Called");
+	console.log("Row Data: " + row);
+	
+  $.post("/actors/deleteActors",
+    {
+		workshop_id: workshop_id,
+		row: row
+    },
+    function(status){
+        console.log("\nStatus: " + status);
+    });
+	
+}
+
+function addARow(row){
+	console.log("Add A Row Called");
+	console.log("Row Data: " + row);
+	
+  $.post("/actors/sheetadd",
+    {
+		workshop_id: workshop_id,
+		row: row
+    },
+    function(status){
+        console.log("\nStatus: " + status);
+    });
+	
+};
+
+
 ReactDOM.render(
-  React.createElement(BootstrapTable, {data: actors, search: true, insertRow: true, deleteRow: true, selectRow: selectRowProp, cellEdit: cellEditProp}, 
-      React.createElement(TableHeaderColumn, {dataField: "ID", isKey: true}, "ID"), 
-      React.createElement(TableHeaderColumn, {dataField: "Connection"}, "Connection"),
+  React.createElement(BootstrapTable, {data: actors, search: true, insertRow: true, deleteRow: true, selectRow: selectRowProp, cellEdit: cellEditProp, options: OptionsSettings}, 
+	  React.createElement(TableHeaderColumn, {dataField: "_id", isKey: true, hidden: true}, "_id"),
 	  React.createElement(TableHeaderColumn, {dataField: "Narrative fragment"}, "Narrative fragment"),
 	  React.createElement(TableHeaderColumn, {dataField: "Name"}, "Name"),
 	  React.createElement(TableHeaderColumn, {dataField: "Class"}, "Class"),

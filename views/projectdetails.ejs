@@ -63,31 +63,16 @@
 			<button type="button" class="btn btn-info" data-toggle="collapse" data-target="#demo">Load demo workshop</button>
 			<div id="demo" class="collapse">
 			<h4>Load demo workshop</h4>
-			<p>There are two sets of Demo Data available. You can use one of these to pre-populate a workshop record with some example data from an example workshop (see documentation)</p>
-			
-			<h5>Large Lego Data Set</h5>
-			<form method="post" action="/support/testdata" role="form" class="form-horizontal" id="prepoplego1">
+			<p>There is a set of Demo Data available. You can use it to pre-populate a workshop record with some example data from an example workshop (see documentation)</p>
+
+			<h5>Example Lego Data Set</h5>
+			<form method="post" action="/support/prepop" role="form" class="form-horizontal" id="prepoplego3">
             <div class="form-group">
  		 		<label for="name" class="col-sm-2 control-label">Name</label>
 				<div class="col-sm-10">
              	   <input type="text" class="form-control" name="name" id="name" required/> <br>
  				   <input type="hidden" name="project_id" id="project_id" value="<%= project._id %>"
-				</div>
-			</div>
-			<div class="form-group">
-				<div class="col-sm-offset-2 col-sm-10">
-					<button type="submit" name="submit" id="submit" class="btn btn-default">Create workshop with Large Lego Data Set</button>
- 				</div>
-			</div>
-			</form>
-			<h4>OR</h4>
-			<h5>Short Lego Data Set</h5>
-			<form method="post" action="/support/testdata2" role="form" class="form-horizontal" id="prepoplego2">
-            <div class="form-group">
- 		 		<label for="name" class="col-sm-2 control-label">Name</label>
-				<div class="col-sm-10">
-             	   <input type="text" class="form-control" name="name" id="name" required/> <br>
- 				   <input type="hidden" name="project_id" id="project_id" value="<%= project._id %>"
+				   <input type="hidden" name="project_name" id="project_name" value="<%= project.name %>"
 				</div>
 			</div>
 			<div class="form-group">

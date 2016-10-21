@@ -46,6 +46,10 @@ router.get('/logout', function(req, res) {
     res.redirect('/');
 });
 
+router.get('/help', function(req, res) {
+	res.render('help', { title: 'Help' , user: req.user});
+});
+
 router.get('/ping', function(req, res){
     res.status(200).send("pong!");
 });

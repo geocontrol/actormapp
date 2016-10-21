@@ -33,13 +33,13 @@
            <% if(typeof(errorMessage) !== 'undefined') {%>
               <span><%= errorMessage %></span>
            <% } %>
-			<ul>		 
+			<table class="table table-striped">		 
            <% workshops.forEach(function(workshop) { %>
 
-			 <li><a href="/workshops/<%= workshop._id %>"><%= workshop.name %></a></li>
+			 <tr><td><a href="/workshops/<%= workshop._id %>"><%= workshop.name %></a></td></tr>
 
 		<% }); %>
-			</ul>
+			</table>
 		<hr>
 		<h2>Add New Workshop</h2>
 		<form method="post" action="/workshops/add" class="form-horizontal">

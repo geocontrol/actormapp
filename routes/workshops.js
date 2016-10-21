@@ -68,10 +68,13 @@ router.post('/add', function(req, res, next) {
 	    // Submit to the DB
 	    workshopscollection.insert(Workshop, function (err, doc) {
 	        if (err) {
+				console.log('Error adding workshop record: ' + err);
 	            // If it failed, return error
 	            res.send("There was a problem adding the information to the database.");
 	        } else {
-				projectscollection.findById(req.body.project_id, function (err, post) {
+				console.log('The added workshop : ' + JSON.stringify(doc));
+				console.log('Updating the project record');
+				projectscollection.findOne(req.body.project_id, function (err, post) {
 					if (post.workshops) {
 						var JSONworkshops = {'workshops':post.workshops};
 						console.log(JSON.stringify(JSONworkshops));
@@ -83,7 +86,9 @@ router.post('/add', function(req, res, next) {
 					JSONname = {'name': req.body.name, 'id': doc._id};
 					JSONworkshops.workshops.push(JSONname);
             
+					console.log('Updated JSON for project record' + JSON.stringify(JSONworkshops));
 					projectscollection.update({_id: req.body.project_id},{$set: JSONworkshops}, {w: 1}, function(err, count, status){
+						if(err) console.log('Database error : ' + err);
 						console.log(status);
 					});
 					// And forward to success page
@@ -102,7 +107,61 @@ router.post('/add', function(req, res, next) {
 });
 
 
+function getActor(db, arg, callback) {
+	var actorcollection = db.get('actors');
+	actorcollection.findOne(node._id, function (err, actor) {
+		if (err) return next(err);
+		actorJSON.actors.push(actor);
+	});
+}
+
+/* GET /workshops/actorsheet/:id */
+router.get('/actorsheet/:id', function(req, res, next) {
+	if(req.user) {
+	    // Set our internal DB variable
+	    var db = req.db;
+	    // Set our collections
+	    var workshopcollection = db.get('workshops');
+		var actorcollection = db.get('actors');
+		
+		actorJSON = {'actors':[]};
+		
+		// Get the workshop details
+		workshopcollection.findOne(req.params.id, function (err, workshop) {
+			if (err) return next(err);
+		 	console.log('Workshop : ' + JSON.stringify(workshop));
+			console.log('Number of Nodes in Workshop : ' + workshop.nodes.length);
+			// Now if there are actors in the workshop get the details for each actor and add to a JSON object
+			workshop.nodes.forEach(function(node) {
+				//actorJSON.actors.push(node);
+				// We now get the full actor details from the actor record page
+				console.log('Now looping to get the actor details');
+				console.log('Current Node: ' + JSON.stringify(node));
+				actorcollection.findOne(node._id, function (err, actor) {
+					if (err) return next(err);
+					actorJSON.actors.push(actor);
+					console.log('Number of Actors in actorJSON : ' + actorJSON.actors.length);
+					if (actorJSON.actors.length == workshop.nodes.length){
+						console.log('Full Actor JSON - during loop: ' + JSON.stringify(actorJSON.actors));
+						res.render('actorsheet', {title: 'Workshop Actors', workshop_id: req.params.id, actors: actorJSON.actors});
+					}
+				});
+				//actorJSON.actors.push(actor);
+			});
+			//actorJSON = getActors(db, workshop.nodes);
+			//console.log('Full Actor JSON - after loop : ' + JSON.stringify(actorJSON));
+			//res.render('actorsheet', {title: 'Workshop Actors', workshop_id: req.params.id, actors: actorJSON});
+		});
+	} else {
+		// No user details rediect to login
+		res.redirect('/login');
+	}	
+});
+
+
+
 /* GET /workshops/actors/id */
+/* This function populates the screen with th spreadsheet view for the actors */
 router.get('/actors/:id', function(req, res, next) {
 	if(req.user) {
 		
@@ -136,20 +195,49 @@ router.get('/actors/:id', function(req, res, next) {
 /* GET /workshops/id */
 router.get('/:id', function(req, res, next) {
 	if(req.user) {
-		console.log('Get the details of an Workshop:' + req.params.id);
+		console.log('Get the details of Workshop:' + req.params.id);
 		console.log(req.body);
 
 	    // Set our internal DB variable
 	    var db = req.db;
 
 	    // Set our collection
+		var projectcollection = db.get('projects');
 	    var collection = db.get('workshops');
-
-		collection.findById(req.params.id, function (err, post) {
+		var actorcollection = db.get('actors');
+		
+		actorJSON = {'actors':[]};
+		
+		collection.findOne(req.params.id, function (err, post) {
 			if (err) return next(err);
-		 	console.log('Workshop : ' + post);
-			res.render('workshopdetails', {title: 'Actor Mapping - Workshops', workshop: post, user: req.user });
-		});	
+			
+			projectcollection.findOne(post.project_id, function(err, project) {
+				projectname = project.name;
+				
+				if(post.nodes){
+				post.nodes.forEach(function(node) {
+				console.log('Now looping to get the actor details');
+				console.log('Current Node: ' + JSON.stringify(node));
+				actorcollection.findOne(node._id, function (err, actor) {
+					if (err) return next(err);
+					actorJSON.actors.push(actor);
+					console.log('Number of Actors in actorJSON : ' + actorJSON.actors.length);
+					if (actorJSON.actors.length == post.nodes.length){
+						console.log('Full Actor JSON - during loop: ' + JSON.stringify(actorJSON.actors));
+						console.log('Project Name: ' + JSON.stringify(projectname));
+						res.render('workshopdetails', {title: 'Workshop Actors', workshop_id: req.params.id, actors: actorJSON.actors, workshop: post, user: req.user, projectname: projectname});
+					}
+				});
+				});
+			} else {
+			 	
+				post['nodes']=[];
+				post['links']=[];
+				console.log('Workshop : ' + JSON.stringify(post));
+				res.render('workshopdetails', {title: 'Actor Mapping - Workshops', workshop_id: req.params.id, actors: actorJSON.actors, workshop: post, user: req.user, projectname: projectname });
+			};	
+		});		
+	});
 	} else {
 		// No user details rediect to login
 		res.redirect('/login');
