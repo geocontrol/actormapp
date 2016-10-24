@@ -322,6 +322,7 @@ router.post('/addrel2', function(req, res, next) {
 		console.log('Add Relationships:');
 		console.log(req.body);
 
+		if(req.body.source != null && req.body.target != null){
 	    // Set our internal DB variable
 	    var db = req.db;
 	
@@ -357,7 +358,7 @@ router.post('/addrel2', function(req, res, next) {
 				console.log(status);
 			});
 		});
-	
+	};
 		res.redirect('/workshops/' + req.body._id);
 	} else {
 		// No user details rediect to login
