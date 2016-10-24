@@ -250,7 +250,7 @@ router.post('/add2', function(req, res, next) {
 		console.log(req.body);
 
 		// If the name is blank then ignore it
-		if(req.body.name != "") {
+		if(req.body.name != "" && req.body.name != null) {
 	    // Set our internal DB variable
 	    var db = req.db;
 	
