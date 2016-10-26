@@ -410,7 +410,7 @@ router.get('/prepoplinks/:id', function(req, res, next) {
 router.post('/exportXML', function(req, res, next) {
 	if(req.user) {
 
-		var XMLOutput = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><system   xmlns="https://www.trespass-project.eu/schemas/TREsPASS_model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.trespass-project.eu/schemas/TREsPASS_model https://www.trespass-project.eu/schemas/TREsPASS_model.xsd" author="INTERActor" version="0.0.0" date="2016-06-14 10:17:42" id="id-BkZ-hlL8Gx-model">';
+		var XMLOutput = '<?xml version="1.0" encoding="UTF-8" standalone="yes"?><system xmlns="https://www.trespass-project.eu/schemas/TREsPASS_model" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="https://www.trespass-project.eu/schemas/TREsPASS_model https://www.trespass-project.eu/schemas/TREsPASS_model.xsd" author="INTERActor" version="0.0.0" date="2016-06-14 10:17:42" id="id-BkZ-hlL8Gx-model">';
 		// Get the Workshop data and then re-jig into XML format for ANM
 	    // Set our internal DB variable
 	    var db = req.db;
@@ -430,7 +430,16 @@ router.post('/exportXML', function(req, res, next) {
 			});
 			XMLOutput = XMLOutput + '</actors><edges></edges><locations></locations><assets></assets></system>';
 			res.set('Content-Type', 'text/xml');
-			res.send(XMLOutput);
+			res.send(new Buffer(XMLOutput));
+			//res.download(XMLOutput, 'export.xml', function(err){
+			//  if (err) {
+			    // Handle error, but keep in mind the response may be partially-sent
+			    // so check res.headersSent
+			//	console.log('XML err : ' + err);
+			//  } else {
+			    // decrement a download credit, etc.
+			//  }
+			//});
 			//res.render('workshopdetails', {title: 'Actor Mapping - Workshops', workshop: post, user: req.user });
 		});	
 

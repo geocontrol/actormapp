@@ -262,7 +262,7 @@ router.post('/relupdate', function(req, res, next) {
 			if (err) console.log(err);
 	        console.log('DB UPDATE: ' + results);
        
-		   	res.send('200');
+		   	res.sendStatus(200);
 	   });
 	} else {
 		// No user details rediect to login
