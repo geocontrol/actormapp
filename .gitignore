@@ -39,3 +39,6 @@ jspm_packages
 # For This Project #########
 # Upload Folder
 uploads
+
+# Mac Specific files
+.DS_Store
