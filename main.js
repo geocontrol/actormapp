@@ -89,13 +89,12 @@ function addARow(row){
 ReactDOM.render(
   React.createElement(BootstrapTable, {data: actors, search: true, insertRow: true, deleteRow: true, selectRow: selectRowProp, cellEdit: cellEditProp, options: OptionsSettings}, 
 	  React.createElement(TableHeaderColumn, {dataField: "_id", isKey: true, hidden: true}, "_id"),
-	  React.createElement(TableHeaderColumn, {dataField: "Narrative fragment"}, "Narrative fragment"),
 	  React.createElement(TableHeaderColumn, {dataField: "Name"}, "Name"),
 	  React.createElement(TableHeaderColumn, {dataField: "Class"}, "Class"),
 	  React.createElement(TableHeaderColumn, {dataField: "Groups"}, "Groups"), 
 	  React.createElement(TableHeaderColumn, {dataField: "Scale"}, "Scale"),
-	  React.createElement(TableHeaderColumn, {dataField: "Posneg"}, "Posneg"),
 	  React.createElement(TableHeaderColumn, {dataField: "Issue"}, "Issue"),
+	  React.createElement(TableHeaderColumn, {dataField: "Narrative fragment"}, "Narrative fragment"),
 	  React.createElement(TableHeaderColumn, {dataField: "Participant speech"}, "Participant speech")
   ),
 	document.getElementById("actors")

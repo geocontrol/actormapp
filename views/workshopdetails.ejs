@@ -32,7 +32,7 @@
 		
 		function listRelationships(){
 			//var newdiv = document.createElement('div');
-			var newinnerHTML = '<table class="table table-striped"><tr><th>Source</th><th>Relationship</th><th>Target</th><th>Value</th><th>Delete</th></tr>';
+			var newinnerHTML = '<table class="table table-striped"><tr><th>Source</th><th>Relationship</th><th>Target</th><th>PosNeg</th><th>Delete</th></tr>';
 			if(workshopJSON.links){
 			console.log(JSON.stringify(workshopJSON.links));
 			workshopJSON.links.forEach(function(link) {

@@ -275,25 +275,25 @@ router.post('/add2', function(req, res, next) {
 					// Double check it isnt a blank name
 					if(name != "") {
 						console.log(name);
-						var JSONname = {'Name': name, 'Scale': 1, 'Posneg': 1};
+						var JSONname = {'Name': name, 'Scale': 1, 'Class': 'Actor'};
 						console.log(JSON.stringify(JSONname));
 				
 						actorscollection.insert(JSONname, {w: 1}, function(err, doc){
-							JSONname = {'Name': name, '_id': doc._id, 'Scale': 1, 'Posneg': 1};
+							JSONname = {'Name': name, '_id': doc._id, 'Scale': 1, 'Class': 'Actor'};
 						});
 						JSONnodes.nodes.push(JSONname);
 						console.log(JSON.stringify(JSONnodes));
 					};
 				});
 			} else {
-				var JSONname = {'Name': req.body.name, 'Scale': 1, 'Posneg': 1};
+				var JSONname = {'Name': req.body.name, 'Scale': 1, 'Class': 'Actor'};
 			
 				actorscollection.insert(JSONname, {w: 1}, function(err, doc){
 					if(err){
 						console.log(err);
 					} else {
 						
-					JSONname = {'Name': req.body.name, '_id': doc._id, 'Scale': 1, 'Posneg': 1};
+					JSONname = {'Name': req.body.name, '_id': doc._id, 'Scale': 1, 'Class': 'Actor'};
 				}
 				});
 				JSONnodes.nodes.push(JSONname);
