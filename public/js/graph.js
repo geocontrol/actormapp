@@ -372,7 +372,9 @@ function updateTooltip() {
 }
 
 
-d3.json('data/graph-with-images.json', function(error, graph) {
+//d3.json('data/graph-with-images.json', function(error, graph) {
+console.log('DATA URL : ' + dataurl);
+d3.json(dataurl, function(error, graph) {
   if (error) throw error;
 
   initScales(graph);

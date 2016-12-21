@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<meta charset="UTF-8">
+<title>Creative Securities - Social pattern mapper</title>
+
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous">
+  
+<style>
+#svg {
+	top: 250px;
+}
+
+#chart-wrapper {
+  position: relative;
+}
+
+/* LEGEND */
+#legend {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+#legend .title {
+  font-size: 0.83em;
+  font-weight: bold;
+}
+#legend .item {
+  display: inline-block;
+  margin-right: 20px;
+}
+
+
+/* TOOLTIP */
+#tooltip {
+  display: none;
+  position: absolute;
+  border: 1px solid #eee;
+  width: 400px;
+  padding: 10px;
+  background-color: white;
+  pointer-events: none;
+  font-size: 12px;
+  box-shadow: 0px 0px 20px 0px rgba(0,0,0,0.25);
+  border-radius: 4px;
+}
+#tooltip .title {
+  font-weight: bold;
+  font-size: 16px;
+  text-align: center;
+  margin-bottom: 6px;
+}
+#tooltip table tr td:first-child {
+  font-weight: bold;
+  width: 80px;
+  text-align: right;
+  padding-right: 6px;
+}
+#tooltip table td {
+  padding-bottom: 6px;
+  vertical-align: top;
+}
+
+/* GRAPH */
+.node {
+  cursor: pointer;
+}
+.node circle {
+  fill: white;
+  stroke: #777;
+}
+.node text {
+  fill: #333;
+  text-anchor: middle;
+}
+	
+.link path.curve {
+  stroke: #999;
+  fill: none;
+}
+.link line.arrow {
+  stroke: none;
+}
+#marker-arrow {
+  fill: #999;
+}
+
+.graph .convex-hulls path {
+  opacity: 0.1;
+  stroke-width: 100;
+  fill: #888;
+  stroke: #888;
+}
+
+
+
+
+
+h1 { font-size: 36px; margin: 10px 0; text-transform: uppercase; font-weight: normal;}
+h2, h3 { font-size: 18px; margin: 5px 0 ; font-weight: normal;}
+a:link { color: #EE3124; text-decoration: none;}
+a:visited { color: #EE3124; }
+a:active { color: #EE3124; }
+</style>
+</head>
+	
+<body class="container">
+  <main>
+    <h1>Actor network map</h1>
+    <h2>Click to view their profile</h2>
+
+    <div id="chart-wrapper">
+      <svg id="svg" width="1048" height="900">
+        <defs>
+          <marker id="marker-arrow" markerWidth="10" markerHeight="10" refX="0" refY="5" orient="auto">
+            <path d="M0,0 l0,10 l10,-5 z" />
+          </marker>
+          <filter id="drop-shadow">
+            <feGaussianBlur in="SourceAlpha" stdDeviation="0" />
+            <feMerge>
+              <feMergeNode />
+              <feMergeNode in="SourceGraphic" />
+            </feMerge>
+          </filter>
+        </defs>
+        <g class="graph">
+          <g class="convex-hulls"></g>
+          <g class="links"></g>
+          <g class="nodes"></g>
+        </g>
+      </svg>
+
+      <div id="legend">
+        <div class="title">CLASSES</div>
+        <div class="items"></div>
+      </div>
+
+      <div id="tooltip">
+        <div class="title"></div>
+        <table>
+        </table>
+      </div>
+
+    </div>
+  </main>
+
+  <script>
+  var dataurl = "/actors/map/mapdata5/<%= workshop_id %>";
+  
+  console.log("Setting DATA URL in page : " + dataurl);
+  </script>
+  <script src="/js/d3.v4.min.js"></script>
+  <script src="/js/d3-scale-chromatic.v1.min.js"></script>
+  <script src="/js/geometry.js"></script>
+  <script src="/js/graph.js"></script>
+</body>
+</html>

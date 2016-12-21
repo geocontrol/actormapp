@@ -516,7 +516,7 @@ router.get('/map/map9/:id', function(req, res, next) {
 router.get('/map/map9embed/:id', function(req, res, next) {
 	if(req.user) {
 		console.log('Get the details of Workshop ID:' + req.params.id);
-		res.render('actormap9embed', {workshop_id: req.params.id, title: 'Actor Network Map', user: req.user});
+		res.render('actorNewEmbed', {workshop_id: req.params.id, title: 'Actor Network Map', user: req.user});
 	} else {
 		// No user details rediect to login
 		res.redirect('/login');
