@@ -87,7 +87,7 @@ function addARow(row){
 
 
 ReactDOM.render(
-  React.createElement(BootstrapTable, {data: actors, search: true, insertRow: true, deleteRow: true, selectRow: selectRowProp, cellEdit: cellEditProp, options: OptionsSettings}, 
+  React.createElement(BootstrapTable, {data: actors, search: true, deleteRow: true, selectRow: selectRowProp, cellEdit: cellEditProp, options: OptionsSettings}, 
 	  React.createElement(TableHeaderColumn, {dataField: "_id", isKey: true, hidden: true}, "_id"),
 	  React.createElement(TableHeaderColumn, {dataField: "Name"}, "Name"),
 	  React.createElement(TableHeaderColumn, {dataField: "Class"}, "Class"),
