@@ -22,6 +22,10 @@ var monk = require('monk');
 //var db = monk('mongodb://localhost:27017/actorMap');
 var db = monk('mongodb://db:27017/actorMap');
 
+// Use native promises
+    mongoose.Promise = global.Promise;
+    //assert.equal(query.exec().constructor, global.Promise);
+
 var passport = require('passport');
 var LocalStrategy = require('passport-local').Strategy;
 

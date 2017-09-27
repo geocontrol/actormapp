@@ -68,17 +68,18 @@ router.post('/add', function(req, res, next) {
 /* GET /projects/id */
 router.get('/:id', function(req, res, next) {
 	console.log('Get the details of an Project:' + req.params.id);
-	console.log(req.body);
 
+	var actor_id = req.params.id;
 	if(req.user) {
+		console.log('User: ' + req.user);
 	    // Set our internal DB variable
 	    var db = req.db;
 
 	    // Set our collection
 	    var collection = db.get('projects');
 
-		collection.findOne(req.params.id, function (err, post) {
-			if (err) return next(err);
+		collection.findOne({"_id": new ObjectId(req.params.id)}, (err, post) => {
+			if (err) return console.log(err)
 		 	console.log('Project : ' + JSON.stringify(post));
 			res.render('projectdetails', {title: 'Actor Mapping - Projects', project: post, user: req.user});
 		});
