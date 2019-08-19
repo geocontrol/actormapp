@@ -4,12 +4,14 @@
   "private": true,
   "scripts": {
     "start": "node ./bin/www",
-	"test" : "make test",
-	"build": "browserify -t [ babelify ] main.js -o ./public/bundle.js"
+    "test": "make test"
   },
   "dependencies": {
+    "babel-preset-react": "latest",
+    "babelify": "latest",
     "body-parser": "latest",
     "bootstrap": "latest",
+    "browserify": "latest",
     "chai": "latest",
     "cookie-parser": "latest",
     "csvtojson": "latest",
@@ -22,21 +24,18 @@
     "mocha": "latest",
     "mongodb": "latest",
     "mongoose": "latest",
-	"mongoskin": "latest",
+    "mongoskin": "latest",
     "monk": "latest",
     "morgan": "latest",
     "multer": "latest",
     "passport": "latest",
     "passport-local": "latest",
     "passport-local-mongoose": "latest",
+    "react": "latest",
+    "react-bootstrap-table": "latest",
+    "react-dom": "latest",
     "serve-favicon": "latest",
     "should": "latest",
-    "string.prototype.startswith": "latest", 
-	"browserify": "latest",
-	"react": "latest",
-	"react-dom": "latest",
-	"react-bootstrap-table": "latest",
-	 "babelify": "latest",
-	 "babel-preset-react": "latest"
+    "string.prototype.startswith": "latest"
   }
 }

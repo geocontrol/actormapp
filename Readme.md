@@ -27,4 +27,9 @@ There are three main components to the INTERActor architecture
 3. HTML Front end - migrating over to using the ReactJS framework, served from the Node.JS application layer
 
 
+Notes:
+
+    "build": "browserify -t [ babelify ] main.js -o ./public/bundle.js"
+
+
 

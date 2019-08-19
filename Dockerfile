@@ -1,4 +1,4 @@
-FROM nodesource/node:4.0
+FROM node:11
 ENV NODE_ENV=development
 
 RUN useradd --user-group --create-home --shell /bin/false app &&\
@@ -15,7 +15,7 @@ RUN mkdir -p /opt/app && cp -a /tmp/node_modules /opt/app/
 WORKDIR /opt/app
 ADD . /opt/app
 
-RUN npm run build 
+#RUN npm run build 
 
 
 CMD ["npm","start"]
